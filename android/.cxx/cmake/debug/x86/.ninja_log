@@ -1,0 +1,4 @@
+# ninja log v5
+0	78	0	CMakeFiles/cpp.dir/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp/example.cpp.o	bce2c38863a4b078
+1	111	0	CMakeFiles/cpp.dir/cpp-adapter.cpp.o	42cf32d7c93d584d
+111	164	0	../../../../build/intermediates/cmake/debug/obj/x86/libcpp.so	97f25b1c5f210dbe

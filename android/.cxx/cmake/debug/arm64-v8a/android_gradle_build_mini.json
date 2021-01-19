@@ -1,0 +1,16 @@
+{
+  "buildFiles": [
+    "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/CMakeLists.txt"
+  ],
+  "cleanCommands": [
+    "/home/laurent/Android/Sdk/cmake/3.6.4111459/bin/cmake --build /home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/.cxx/cmake/debug/arm64-v8a --target clean"
+  ],
+  "libraries": {
+    "cpp-Debug-arm64-v8a": {
+      "artifactName": "cpp",
+      "buildCommand": "/home/laurent/Android/Sdk/cmake/3.6.4111459/bin/cmake --build /home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/.cxx/cmake/debug/arm64-v8a --target cpp",
+      "abi": "arm64-v8a",
+      "output": "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/build/intermediates/cmake/debug/obj/arm64-v8a/libcpp.so"
+    }
+  }
+}

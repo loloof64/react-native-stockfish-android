@@ -1,22 +1,17 @@
 import * as React from 'react';
-
 import { StyleSheet, View, Text } from 'react-native';
 import StockfishAndroid from 'react-native-stockfish-android';
-
 export default function App() {
-  const [result, setResult] = React.useState<number | undefined>();
-
+  const [result, setResult] = React.useState();
   React.useEffect(() => {
     StockfishAndroid.multiply(3, 7).then(setResult);
   }, []);
-
-  return (
-    <View style={styles.container}>
-      <Text>Result: {result}</Text>
-    </View>
+  return React.createElement(
+    View,
+    { style: styles.container },
+    React.createElement(Text, null, 'Result: ', result)
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

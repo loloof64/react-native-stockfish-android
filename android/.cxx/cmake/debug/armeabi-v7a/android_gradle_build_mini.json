@@ -1,0 +1,16 @@
+{
+  "buildFiles": [
+    "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/CMakeLists.txt"
+  ],
+  "cleanCommands": [
+    "/home/laurent/Android/Sdk/cmake/3.6.4111459/bin/cmake --build /home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/.cxx/cmake/debug/armeabi-v7a --target clean"
+  ],
+  "libraries": {
+    "cpp-Debug-armeabi-v7a": {
+      "artifactName": "cpp",
+      "buildCommand": "/home/laurent/Android/Sdk/cmake/3.6.4111459/bin/cmake --build /home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/.cxx/cmake/debug/armeabi-v7a --target cpp",
+      "abi": "armeabi-v7a",
+      "output": "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/build/intermediates/cmake/debug/obj/armeabi-v7a/libcpp.so"
+    }
+  }
+}
