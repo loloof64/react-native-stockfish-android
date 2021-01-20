@@ -1,7 +1,7 @@
 {
   "name": "react-native-stockfish-android",
   "version": "0.1.0",
-  "description": "Use stockfish 11 in your react native Android application",
+  "description": "Use stockfish 12 in your react native Android application",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
   "types": "lib/typescript/src/index.d.ts",
