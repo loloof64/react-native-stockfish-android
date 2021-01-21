@@ -1,0 +1,43 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/.cxx/cmake/debug/x86_64/CMakeFiles/cpp_rsc_prj"
+		},
+		{
+			"file" : "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/.cxx/cmake/debug/x86_64/CMakeFiles/cpp_rsc_prj.rule"
+		},
+		{
+			"file" : "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/.cxx/cmake/debug/x86_64/CMakeFiles/cpp_rsc_prj-complete.rule"
+		},
+		{
+			"file" : "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/.cxx/cmake/debug/x86_64/cpp_rsc_prj-prefix/src/cpp_rsc_prj-stamp/cpp_rsc_prj-install.rule"
+		},
+		{
+			"file" : "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/.cxx/cmake/debug/x86_64/cpp_rsc_prj-prefix/src/cpp_rsc_prj-stamp/cpp_rsc_prj-mkdir.rule"
+		},
+		{
+			"file" : "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/.cxx/cmake/debug/x86_64/cpp_rsc_prj-prefix/src/cpp_rsc_prj-stamp/cpp_rsc_prj-download.rule"
+		},
+		{
+			"file" : "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/.cxx/cmake/debug/x86_64/cpp_rsc_prj-prefix/src/cpp_rsc_prj-stamp/cpp_rsc_prj-update.rule"
+		},
+		{
+			"file" : "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/.cxx/cmake/debug/x86_64/cpp_rsc_prj-prefix/src/cpp_rsc_prj-stamp/cpp_rsc_prj-patch.rule"
+		},
+		{
+			"file" : "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/.cxx/cmake/debug/x86_64/cpp_rsc_prj-prefix/src/cpp_rsc_prj-stamp/cpp_rsc_prj-configure.rule"
+		},
+		{
+			"file" : "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/.cxx/cmake/debug/x86_64/cpp_rsc_prj-prefix/src/cpp_rsc_prj-stamp/cpp_rsc_prj-build.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"cpp_rsc_prj"
+		],
+		"name" : "cpp_rsc_prj"
+	}
+}

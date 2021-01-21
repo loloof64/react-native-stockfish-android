@@ -1,31 +1,175 @@
-
 {
-	"buildFiles" : 
-	[
-		"/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/CMakeLists.txt"
-	],
-	"cleanCommands" : 
-	[
-		"/home/laurent/Android/Sdk/cmake/3.6.4111459/bin/cmake --build /home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/.cxx/cmake/debug/armeabi-v7a --target clean"
-	],
-	"libraries" : 
-	{
-		"stockfish_cpp-Debug-armeabi-v7a" : 
-		{
-			"abi" : "armeabi-v7a",
-			"artifactName" : "stockfish_cpp",
-			"buildCommand" : "/home/laurent/Android/Sdk/cmake/3.6.4111459/bin/cmake --build /home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/.cxx/cmake/debug/armeabi-v7a --target stockfish_cpp",
-			"buildType" : "debug",
-			"output" : "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/build/intermediates/cmake/debug/obj/armeabi-v7a/libstockfish_cpp.so",
-			"toolchain" : "10993564449821637306"
-		}
-	},
-	"toolchains" : 
-	{
-		"10993564449821637306" : 
-		{
-			"cCompilerExecutable" : "/home/laurent/Android/Sdk/ndk/22.0.7026061/toolchains/llvm/prebuilt/linux-x86_64/bin/clang",
-			"cppCompilerExecutable" : "/home/laurent/Android/Sdk/ndk/22.0.7026061/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++"
-		}
-	}
+  "stringTable": {
+    "0": "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/.cxx/cmake/debug/armeabi-v7a",
+    "1": "--target=armv7-none-linux-androideabi16 --gcc-toolchain=/home/laurent/Android/Sdk/ndk/22.0.7026061/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/laurent/Android/Sdk/ndk/22.0.7026061/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Dstockfish_EXPORTS -I/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp/./stockfish -I/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp/./stockfish/incbin -I/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp/./stockfish/nnue -I/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp/./stockfish/nnue/architectures -I/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp/./stockfish/nnue/features -I/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp/./stockfish/nnue/layers -I/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp/./stockfish/syzygy -I/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp/. -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -march=armv7-a -mthumb -Wformat -Werror=format-security -O2 -frtti -fexceptions -Wall -fstack-protector-all -O0 -fno-limit-debug-info -fPIC -std=gnu++1z",
+    "2": "null"
+  },
+  "buildFiles": [
+    "/home/laurent/Android/Sdk/ndk/22.0.7026061/build/cmake/platforms.cmake",
+    "/home/laurent/Android/Sdk/ndk/22.0.7026061/build/cmake/android.toolchain.cmake",
+    "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp/stockfish/CMakeLists.txt",
+    "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp/CMakeLists.txt"
+  ],
+  "cleanCommands": [
+    "/home/laurent/Android/Sdk/cmake/3.10.2.4988404/bin/ninja -C \"/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/.cxx/cmake/debug/armeabi-v7a\" clean"
+  ],
+  "buildTargetsCommand": "/home/laurent/Android/Sdk/cmake/3.10.2.4988404/bin/ninja -C \"/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/.cxx/cmake/debug/armeabi-v7a\" {LIST_OF_TARGETS_TO_BUILD}",
+  "libraries": {
+    "stockfish_cpp-Debug-armeabi-v7a": {
+      "buildCommand": "/home/laurent/Android/Sdk/cmake/3.10.2.4988404/bin/ninja -C \"/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/.cxx/cmake/debug/armeabi-v7a\" stockfish_cpp",
+      "buildType": "debug",
+      "toolchain": "3323179628",
+      "abi": "armeabi-v7a",
+      "artifactName": "stockfish_cpp",
+      "files": [
+        {
+          "src": "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp/nativeutil",
+          "flagsOrdinal": 2,
+          "workingDirectoryOrdinal": 0
+        },
+        {
+          "src": "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp/stockfish",
+          "flagsOrdinal": 2,
+          "workingDirectoryOrdinal": 0
+        }
+      ],
+      "headers": [],
+      "output": "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/build/intermediates/cmake/debug/obj/armeabi-v7a/libstockfish_cpp.so"
+    },
+    "stockfish-Debug-armeabi-v7a": {
+      "buildCommand": "/home/laurent/Android/Sdk/cmake/3.10.2.4988404/bin/ninja -C \"/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/.cxx/cmake/debug/armeabi-v7a\" stockfish",
+      "buildType": "debug",
+      "toolchain": "3323179628",
+      "abi": "armeabi-v7a",
+      "artifactName": "stockfish",
+      "files": [
+        {
+          "src": "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp/stockfish/benchmark.cpp",
+          "flagsOrdinal": 1,
+          "workingDirectoryOrdinal": 0
+        },
+        {
+          "src": "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp/stockfish/bitbase.cpp",
+          "flagsOrdinal": 1,
+          "workingDirectoryOrdinal": 0
+        },
+        {
+          "src": "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp/stockfish/bitboard.cpp",
+          "flagsOrdinal": 1,
+          "workingDirectoryOrdinal": 0
+        },
+        {
+          "src": "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp/stockfish/endgame.cpp",
+          "flagsOrdinal": 1,
+          "workingDirectoryOrdinal": 0
+        },
+        {
+          "src": "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp/stockfish/evaluate.cpp",
+          "flagsOrdinal": 1,
+          "workingDirectoryOrdinal": 0
+        },
+        {
+          "src": "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp/stockfish/main.cpp",
+          "flagsOrdinal": 1,
+          "workingDirectoryOrdinal": 0
+        },
+        {
+          "src": "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp/stockfish/material.cpp",
+          "flagsOrdinal": 1,
+          "workingDirectoryOrdinal": 0
+        },
+        {
+          "src": "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp/stockfish/misc.cpp",
+          "flagsOrdinal": 1,
+          "workingDirectoryOrdinal": 0
+        },
+        {
+          "src": "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp/stockfish/movegen.cpp",
+          "flagsOrdinal": 1,
+          "workingDirectoryOrdinal": 0
+        },
+        {
+          "src": "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp/stockfish/movepick.cpp",
+          "flagsOrdinal": 1,
+          "workingDirectoryOrdinal": 0
+        },
+        {
+          "src": "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp/stockfish/pawns.cpp",
+          "flagsOrdinal": 1,
+          "workingDirectoryOrdinal": 0
+        },
+        {
+          "src": "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp/stockfish/position.cpp",
+          "flagsOrdinal": 1,
+          "workingDirectoryOrdinal": 0
+        },
+        {
+          "src": "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp/stockfish/psqt.cpp",
+          "flagsOrdinal": 1,
+          "workingDirectoryOrdinal": 0
+        },
+        {
+          "src": "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp/stockfish/search.cpp",
+          "flagsOrdinal": 1,
+          "workingDirectoryOrdinal": 0
+        },
+        {
+          "src": "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp/stockfish/thread.cpp",
+          "flagsOrdinal": 1,
+          "workingDirectoryOrdinal": 0
+        },
+        {
+          "src": "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp/stockfish/timeman.cpp",
+          "flagsOrdinal": 1,
+          "workingDirectoryOrdinal": 0
+        },
+        {
+          "src": "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp/stockfish/tt.cpp",
+          "flagsOrdinal": 1,
+          "workingDirectoryOrdinal": 0
+        },
+        {
+          "src": "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp/stockfish/tune.cpp",
+          "flagsOrdinal": 1,
+          "workingDirectoryOrdinal": 0
+        },
+        {
+          "src": "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp/stockfish/uci.cpp",
+          "flagsOrdinal": 1,
+          "workingDirectoryOrdinal": 0
+        },
+        {
+          "src": "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp/stockfish/ucioption.cpp",
+          "flagsOrdinal": 1,
+          "workingDirectoryOrdinal": 0
+        },
+        {
+          "src": "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp/stockfish/nnue/evaluate_nnue.cpp",
+          "flagsOrdinal": 1,
+          "workingDirectoryOrdinal": 0
+        },
+        {
+          "src": "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp/stockfish/nnue/features/half_kp.cpp",
+          "flagsOrdinal": 1,
+          "workingDirectoryOrdinal": 0
+        },
+        {
+          "src": "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp/stockfish/syzygy/tbprobe.cpp",
+          "flagsOrdinal": 1,
+          "workingDirectoryOrdinal": 0
+        }
+      ],
+      "headers": [],
+      "output": "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/build/intermediates/cmake/debug/obj/armeabi-v7a/libstockfish.so"
+    }
+  },
+  "toolchains": {
+    "3323179628": {
+      "cppCompilerExecutable": "/home/laurent/Android/Sdk/ndk/22.0.7026061/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++"
+    }
+  },
+  "cFileExtensions": [],
+  "cppFileExtensions": [
+    "cpp"
+  ]
 }

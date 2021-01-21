@@ -1,3 +1,1 @@
--- Configuring done
--- Generating done
--- Build files have been written to: /home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/.cxx/cmake/debug/armeabi-v7a
+Configuring done

@@ -9,7 +9,7 @@
       "intermediatesFolder": "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/build/intermediates",
       "gradleModulePathName": ":reactnativestockfishandroid",
       "moduleRootFolder": "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android",
-      "makeFile": "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/CMakeLists.txt",
+      "makeFile": "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp/CMakeLists.txt",
       "buildSystem": "CMAKE",
       "compilerSettingsCacheFolder": "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/example/android/.cxx",
       "cxxFolder": "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/.cxx",

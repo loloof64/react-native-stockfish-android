@@ -1,0 +1,143 @@
+CMAKE SERVER: 
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"supportedProtocolVersions":[{"isExperimental":true,"major":1,"minor":1}],"type":"hello"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {
+  "type": "handshake",
+  "cookie": "gradle-cmake-cookie",
+  "protocolVersion": {
+    "isExperimental": true,
+    "major": 1,
+    "minor": 1
+  },
+  "sourceDirectory": "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp",
+  "buildDirectory": "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/.cxx/cmake/debug/x86_64",
+  "generator": "Ninja"
+}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: 
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"cookie":"gradle-cmake-cookie","inReplyTo":"handshake","type":"reply"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {
+  "type": "configure",
+  "cacheArguments": [
+    "",
+    "-DANDROID_ABI\u003dx86_64",
+    "-DANDROID_PLATFORM\u003dandroid-16",
+    "-DCMAKE_LIBRARY_OUTPUT_DIRECTORY\u003d/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/build/intermediates/cmake/debug/obj/x86_64",
+    "-DCMAKE_BUILD_TYPE\u003dDebug",
+    "-DANDROID_NDK\u003d/home/laurent/Android/Sdk/ndk/22.0.7026061",
+    "-DCMAKE_CXX_FLAGS\u003d-O2 -frtti -fexceptions -Wall -fstack-protector-all",
+    "-DCMAKE_SYSTEM_NAME\u003dAndroid",
+    "-DCMAKE_ANDROID_ARCH_ABI\u003dx86_64",
+    "-DCMAKE_SYSTEM_VERSION\u003d16",
+    "-DCMAKE_EXPORT_COMPILE_COMMANDS\u003dON",
+    "-DCMAKE_ANDROID_NDK\u003d/home/laurent/Android/Sdk/ndk/22.0.7026061",
+    "-DCMAKE_TOOLCHAIN_FILE\u003d/home/laurent/Android/Sdk/ndk/22.0.7026061/build/cmake/android.toolchain.cmake",
+    "-G Ninja",
+    "-DCMAKE_MAKE_PROGRAM\u003d/home/laurent/Android/Sdk/cmake/3.10.2.4988404/bin/ninja"
+  ]
+}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: 
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"cookie":"","inReplyTo":"configure","progressCurrent":1000,"progressMaximum":1000,"progressMessage":"Configuring","progressMinimum":0,"type":"progress"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: 
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"cookie":"","inReplyTo":"configure","message":"Configuring done","type":"message"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: Configuring done
+CMAKE SERVER: Configuring done
+CMAKE SERVER: 
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"cookie":"","inReplyTo":"configure","type":"reply"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"type":"compute"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: 
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"cookie":"","inReplyTo":"compute","progressCurrent":1000,"progressMaximum":1000,"progressMessage":"Generating","progressMinimum":0,"type":"progress"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: 
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"cookie":"","inReplyTo":"compute","message":"Generating done","type":"message"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: Generating done
+CMAKE SERVER: 
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"cookie":"","inReplyTo":"compute","type":"reply"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"type":"cmakeInputs"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: 
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"buildFiles":[{"isCMake":true,"isTemporary":false,"sources":["/home/laurent/Android/Sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/CMakeSystemSpecificInitialize.cmake","/home/laurent/Android/Sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Platform/Android-Initialize.cmake","/home/laurent/Android/Sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/CMakeSystemSpecificInformation.cmake","/home/laurent/Android/Sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/CMakeGenericSystem.cmake","/home/laurent/Android/Sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Platform/Android.cmake","/home/laurent/Android/Sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Platform/Linux.cmake","/home/laurent/Android/Sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Platform/UnixPaths.cmake","/home/laurent/Android/Sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/CMakeCInformation.cmake","/home/laurent/Android/Sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/CMakeLanguageInformation.cmake","/home/laurent/Android/Sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Compiler/Clang-C.cmake","/home/laurent/Android/Sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Compiler/Clang.cmake","/home/laurent/Android/Sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Compiler/CMakeCommonCompilerMacros.cmake","/home/laurent/Android/Sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Compiler/GNU.cmake","/home/laurent/Android/Sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Compiler/CMakeCommonCompilerMacros.cmake","/home/laurent/Android/Sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Platform/Android-Clang-C.cmake","/home/laurent/Android/Sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Platform/Android-Clang.cmake","/home/laurent/Android/Sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/CMakeCommonLanguageInclude.cmake","/home/laurent/Android/Sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/CMakeCXXInformation.cmake","/home/laurent/Android/Sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/CMakeLanguageInformation.cmake","/home/laurent/Android/Sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Compiler/Clang-CXX.cmake","/home/laurent/Android/Sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Compiler/Clang.cmake","/home/laurent/Android/Sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Platform/Android-Clang-CXX.cmake","/home/laurent/Android/Sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Platform/Android-Clang.cmake","/home/laurent/Android/Sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/CMakeCommonLanguageInclude.cmake"]},{"isCMake":false,"isTemporary":false,"sources":["CMakeLists.txt","/home/laurent/Android/Sdk/ndk/22.0.7026061/build/cmake/android.toolchain.cmake","/home/laurent/Android/Sdk/ndk/22.0.7026061/build/cmake/platforms.cmake","stockfish/CMakeLists.txt"]},{"isCMake":false,"isTemporary":true,"sources":["../android/.cxx/cmake/debug/x86_64/CMakeFiles/3.10.2/CMakeSystem.cmake","../android/.cxx/cmake/debug/x86_64/CMakeFiles/3.10.2/CMakeCCompiler.cmake","../android/.cxx/cmake/debug/x86_64/CMakeFiles/3.10.2/CMakeCXXCompiler.cmake"]}],"cmakeRootDirectory":"/home/laurent/Android/Sdk/cmake/3.10.2.4988404/share/cmake-3.10","cookie":"","inReplyTo":"cmakeInputs","sourceDirectory":"/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp","type":"reply"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"type":"codemodel"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: 
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"configurations":[{"name":"Debug","projects":[{"buildDirectory":"/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/.cxx/cmake/debug/x86_64","name":"stockfish","sourceDirectory":"/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp","targets":[{"artifacts":["/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/build/intermediates/cmake/debug/obj/x86_64/libstockfish_cpp.so"],"buildDirectory":"/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/.cxx/cmake/debug/x86_64","fileGroups":[{"isGenerated":false,"sources":["nativeutil","stockfish"]}],"fullName":"libstockfish_cpp.so","linkFlags":"-Wl,--exclude-libs,libgcc.a -Wl,--exclude-libs,libgcc_real.a -Wl,--exclude-libs,libatomic.a -static-libstdc++ -Wl,--build-id=sha1 -Wl,--no-rosegment -Wl,--fatal-warnings -Wl,--no-undefined -Qunused-arguments","linkLibraries":"-latomic -lm","linkerLanguage":"CXX","name":"stockfish_cpp","sourceDirectory":"/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp","sysroot":"/home/laurent/Android/Sdk/ndk/22.0.7026061/toolchains/llvm/prebuilt/linux-x86_64/sysroot","type":"SHARED_LIBRARY"},{"artifacts":["/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/build/intermediates/cmake/debug/obj/x86_64/libstockfish.so"],"buildDirectory":"/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/.cxx/cmake/debug/x86_64","fileGroups":[{"compileFlags":"-g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O2 -frtti -fexceptions -Wall -fstack-protector-all -O0 -fno-limit-debug-info  -fPIC   -std=gnu++1z","defines":["stockfish_EXPORTS"],"includePath":[{"path":"/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp/./stockfish"},{"path":"/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp/./stockfish/incbin"},{"path":"/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp/./stockfish/nnue"},{"path":"/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp/./stockfish/nnue/architectures"},{"path":"/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp/./stockfish/nnue/features"},{"path":"/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp/./stockfish/nnue/layers"},{"path":"/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp/./stockfish/syzygy"},{"path":"/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp/."}],"isGenerated":false,"language":"CXX","sources":["stockfish/benchmark.cpp","stockfish/bitbase.cpp","stockfish/bitboard.cpp","stockfish/endgame.cpp","stockfish/evaluate.cpp","stockfish/main.cpp","stockfish/material.cpp","stockfish/misc.cpp","stockfish/movegen.cpp","stockfish/movepick.cpp","stockfish/pawns.cpp","stockfish/position.cpp","stockfish/psqt.cpp","stockfish/search.cpp","stockfish/thread.cpp","stockfish/timeman.cpp","stockfish/tt.cpp","stockfish/tune.cpp","stockfish/uci.cpp","stockfish/ucioption.cpp","stockfish/nnue/evaluate_nnue.cpp","stockfish/nnue/features/half_kp.cpp","stockfish/syzygy/tbprobe.cpp"]}],"fullName":"libstockfish.so","linkFlags":"-Wl,--exclude-libs,libgcc.a -Wl,--exclude-libs,libgcc_real.a -Wl,--exclude-libs,libatomic.a -static-libstdc++ -Wl,--build-id=sha1 -Wl,--no-rosegment -Wl,--fatal-warnings -Wl,--no-undefined -Qunused-arguments","linkLibraries":"-latomic -lm","linkerLanguage":"CXX","name":"stockfish","sourceDirectory":"/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp","sysroot":"/home/laurent/Android/Sdk/ndk/22.0.7026061/toolchains/llvm/prebuilt/linux-x86_64/sysroot","type":"SHARED_LIBRARY"}]}]}],"cookie":"","inReplyTo":"codemodel","type":"reply"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+

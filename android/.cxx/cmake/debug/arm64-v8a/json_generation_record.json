@@ -13,7 +13,11 @@
   },
   {
     "level": "INFO",
-    "message": "  - /home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/CMakeLists.txt"
+    "message": "  - /home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp/cpp_resource.cmake"
+  },
+  {
+    "level": "INFO",
+    "message": "  - /home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp/CMakeLists.txt"
   },
   {
     "level": "INFO",
@@ -21,14 +25,22 @@
   },
   {
     "level": "INFO",
-    "message": "executing cmake Executable : /home/laurent/Android/Sdk/cmake/3.6.4111459/bin/cmake\narguments : \n-H/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android\n-B/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/.cxx/cmake/debug/arm64-v8a\n-DANDROID_ABI\u003darm64-v8a\n-DANDROID_PLATFORM\u003dandroid-16\n-DCMAKE_LIBRARY_OUTPUT_DIRECTORY\u003d/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/build/intermediates/cmake/debug/obj/arm64-v8a\n-DCMAKE_BUILD_TYPE\u003dDebug\n-DANDROID_NDK\u003d/home/laurent/Android/Sdk/ndk/22.0.7026061\n-DCMAKE_CXX_FLAGS\u003d-O2 -frtti -fexceptions -Wall -fstack-protector-all\n-DCMAKE_TOOLCHAIN_FILE\u003d/home/laurent/Android/Sdk/ndk/22.0.7026061/build/cmake/android.toolchain.cmake\n-DCMAKE_MAKE_PROGRAM\u003d/home/laurent/Android/Sdk/cmake/3.6.4111459/bin/ninja\n-GAndroid Gradle - Ninja\njvmArgs : \n\n"
+    "message": "executing cmake Executable : /home/laurent/Android/Sdk/cmake/3.10.2.4988404/bin/cmake\narguments : \n-H/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp\n-B/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/.cxx/cmake/debug/arm64-v8a\n-DANDROID_ABI\u003darm64-v8a\n-DANDROID_PLATFORM\u003dandroid-16\n-DCMAKE_LIBRARY_OUTPUT_DIRECTORY\u003d/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/build/intermediates/cmake/debug/obj/arm64-v8a\n-DCMAKE_BUILD_TYPE\u003dDebug\n-DANDROID_NDK\u003d/home/laurent/Android/Sdk/ndk/22.0.7026061\n-DCMAKE_CXX_FLAGS\u003d-O2 -frtti -fexceptions -Wall -fstack-protector-all\n-DCMAKE_SYSTEM_NAME\u003dAndroid\n-DCMAKE_ANDROID_ARCH_ABI\u003darm64-v8a\n-DCMAKE_SYSTEM_VERSION\u003d16\n-DCMAKE_EXPORT_COMPILE_COMMANDS\u003dON\n-DCMAKE_ANDROID_NDK\u003d/home/laurent/Android/Sdk/ndk/22.0.7026061\n-DCMAKE_TOOLCHAIN_FILE\u003d/home/laurent/Android/Sdk/ndk/22.0.7026061/build/cmake/android.toolchain.cmake\n-G Ninja\n-DCMAKE_MAKE_PROGRAM\u003d/home/laurent/Android/Sdk/cmake/3.10.2.4988404/bin/ninja\njvmArgs : \n\n"
   },
   {
     "level": "INFO",
-    "message": "Executable : /home/laurent/Android/Sdk/cmake/3.6.4111459/bin/cmake\narguments : \n-H/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android\n-B/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/.cxx/cmake/debug/arm64-v8a\n-DANDROID_ABI\u003darm64-v8a\n-DANDROID_PLATFORM\u003dandroid-16\n-DCMAKE_LIBRARY_OUTPUT_DIRECTORY\u003d/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/build/intermediates/cmake/debug/obj/arm64-v8a\n-DCMAKE_BUILD_TYPE\u003dDebug\n-DANDROID_NDK\u003d/home/laurent/Android/Sdk/ndk/22.0.7026061\n-DCMAKE_CXX_FLAGS\u003d-O2 -frtti -fexceptions -Wall -fstack-protector-all\n-DCMAKE_TOOLCHAIN_FILE\u003d/home/laurent/Android/Sdk/ndk/22.0.7026061/build/cmake/android.toolchain.cmake\n-DCMAKE_MAKE_PROGRAM\u003d/home/laurent/Android/Sdk/cmake/3.6.4111459/bin/ninja\n-GAndroid Gradle - Ninja\njvmArgs : \n\n"
+    "message": "done executing cmake"
   },
   {
     "level": "INFO",
-    "message": "JSON generation completed with problem. Exception: Build command failed.\nError while executing process /home/laurent/Android/Sdk/cmake/3.6.4111459/bin/cmake with arguments {-H/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android -B/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/.cxx/cmake/debug/arm64-v8a -DANDROID_ABI\u003darm64-v8a -DANDROID_PLATFORM\u003dandroid-16 -DCMAKE_LIBRARY_OUTPUT_DIRECTORY\u003d/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/build/intermediates/cmake/debug/obj/arm64-v8a -DCMAKE_BUILD_TYPE\u003dDebug -DANDROID_NDK\u003d/home/laurent/Android/Sdk/ndk/22.0.7026061 -DCMAKE_CXX_FLAGS\u003d-O2 -frtti -fexceptions -Wall -fstack-protector-all -DCMAKE_TOOLCHAIN_FILE\u003d/home/laurent/Android/Sdk/ndk/22.0.7026061/build/cmake/android.toolchain.cmake -DCMAKE_MAKE_PROGRAM\u003d/home/laurent/Android/Sdk/cmake/3.6.4111459/bin/ninja -GAndroid Gradle - Ninja}\n-- Configuring done\n-- Generating done\n-- Build files have been written to: /home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/.cxx/cmake/debug/arm64-v8a\n\nCMake Warning at /home/laurent/Android/Sdk/ndk/22.0.7026061/build/cmake/android.toolchain.cmake:453 (message):\n  An old version of CMake is being used that cannot automatically detect\n  compiler attributes.  Compiler identification is being bypassed.  Some\n  values may be wrong or missing.  Update to CMake 3.10 or newer to use\n  CMake\u0027s built-in compiler identification.\nCall Stack (most recent call first):\n  .cxx/cmake/debug/arm64-v8a/CMakeFiles/3.6.0-rc2/CMakeSystem.cmake:6 (include)\n  CMakeLists.txt\n\n\nCMake Error at CMakeLists.txt:6 (add_library):\n  Cannot find source file:\n\n    ../cpp/Stockfish/benchmark.cpp\n\n  Tried extensions .c .C .c++ .cc .cpp .cxx .m .M .mm .h .hh .h++ .hm .hpp\n  .hxx .in .txx\n\n\nCMake Error: CMake can not determine linker language for target: stockfish_cpp\n"
+    "message": "write build output /home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/.cxx/cmake/debug/arm64-v8a/build_output.txt"
+  },
+  {
+    "level": "INFO",
+    "message": "write command file /home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/.cxx/cmake/debug/arm64-v8a/build_command.txt"
+  },
+  {
+    "level": "INFO",
+    "message": "JSON generation completed without problems"
   }
 ]
