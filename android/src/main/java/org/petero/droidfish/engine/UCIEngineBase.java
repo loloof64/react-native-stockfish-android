@@ -21,7 +21,6 @@
 package org.petero.droidfish.engine;
 
 import android.content.Context;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -32,8 +31,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TreeMap;
-
 import org.petero.droidfish.EngineOptions;
+
+
 
 public abstract class UCIEngineBase implements UCIEngine {
 

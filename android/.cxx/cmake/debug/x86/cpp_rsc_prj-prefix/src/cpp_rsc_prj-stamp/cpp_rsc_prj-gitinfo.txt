@@ -1,3 +1,0 @@
-repository='https://github.com/orex/cpp_rsc.git'
-module=''
-tag=''

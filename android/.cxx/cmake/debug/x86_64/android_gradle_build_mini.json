@@ -2,7 +2,6 @@
   "buildFiles": [
     "/home/laurent/Android/Sdk/ndk/22.0.7026061/build/cmake/platforms.cmake",
     "/home/laurent/Android/Sdk/ndk/22.0.7026061/build/cmake/android.toolchain.cmake",
-    "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp/stockfish/CMakeLists.txt",
     "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp/CMakeLists.txt"
   ],
   "cleanCommands": [
@@ -10,12 +9,6 @@
   ],
   "buildTargetsCommand": "/home/laurent/Android/Sdk/cmake/3.10.2.4988404/bin/ninja -C \"/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/.cxx/cmake/debug/x86_64\" {LIST_OF_TARGETS_TO_BUILD}",
   "libraries": {
-    "stockfish_cpp-Debug-x86_64": {
-      "artifactName": "stockfish_cpp",
-      "buildCommand": "/home/laurent/Android/Sdk/cmake/3.10.2.4988404/bin/ninja -C \"/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/.cxx/cmake/debug/x86_64\" stockfish_cpp",
-      "abi": "x86_64",
-      "output": "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/build/intermediates/cmake/debug/obj/x86_64/libstockfish_cpp.so"
-    },
     "stockfish-Debug-x86_64": {
       "artifactName": "stockfish",
       "buildCommand": "/home/laurent/Android/Sdk/cmake/3.10.2.4988404/bin/ninja -C \"/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/.cxx/cmake/debug/x86_64\" stockfish",

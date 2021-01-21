@@ -15,7 +15,7 @@ import {
   Button,
   NativeModules,
 } from 'react-native';
-import Engine from 'react-native-stockfish';
+import Engine from 'react-native-stockfish-android';
 
 // Engine.on('pv', pv => console.log('pv', pv));
 // Engine.on('bestMove', moves => {

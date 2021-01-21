@@ -16,6 +16,15 @@ import StockfishAndroid from "react-native-stockfish-android";
 // ...
 ```
 
+## How to run the example
+
+1. install nodejs (lts or later) and yarn
+2. cd example
+3. run `yarn` in order to install dependencies
+4. ensure a device is connected (either emulator or real device) : check by `adb devices`
+4. run `npx react-native start` in one terminal in order to start the local server
+5. run `npx react-native run-android` in another terminal in order to compile and deploy example on device.
+
 ## Contributing
 
 See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.

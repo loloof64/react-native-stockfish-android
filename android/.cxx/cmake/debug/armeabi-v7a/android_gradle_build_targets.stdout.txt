@@ -1,7 +1,0 @@
-ninja: Entering directory `/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/.cxx/cmake/debug/armeabi-v7a'
-[0/1] Re-running CMake...
--- Configuring done
--- Generating done
--- Build files have been written to: /home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/.cxx/cmake/debug/armeabi-v7a
-[1/2] Building CXX object CMakeFiles/stockfish.dir/stockfish/evaluate.cpp.o
-[2/2] Linking CXX shared library /home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/build/intermediates/cmake/debug/obj/armeabi-v7a/libstockfish.so

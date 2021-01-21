@@ -150,7 +150,7 @@ CMAKE_OBJCOPY:FILEPATH=/home/laurent/Android/Sdk/ndk/22.0.7026061/toolchains/llv
 CMAKE_OBJDUMP:FILEPATH=/home/laurent/Android/Sdk/ndk/22.0.7026061/toolchains/llvm/prebuilt/linux-x86_64/bin/arm-linux-androideabi-objdump
 
 //Value Computed by CMake
-CMAKE_PROJECT_NAME:STATIC=stockfish
+CMAKE_PROJECT_NAME:STATIC=Project
 
 //Ranlib
 CMAKE_RANLIB:FILEPATH=/home/laurent/Android/Sdk/ndk/22.0.7026061/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-ranlib
@@ -210,26 +210,14 @@ CMAKE_TOOLCHAIN_FILE:UNINITIALIZED=/home/laurent/Android/Sdk/ndk/22.0.7026061/bu
 // Studio IDE projects all commands are done without /nologo.
 CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
 
-//Git command line client
-GIT_EXECUTABLE:FILEPATH=/usr/bin/git
-
 //Value Computed by CMake
 Project_BINARY_DIR:STATIC=/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/.cxx/cmake/debug/armeabi-v7a
 
 //Value Computed by CMake
 Project_SOURCE_DIR:STATIC=/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp
 
-//Value Computed by CMake
-stockfish_BINARY_DIR:STATIC=/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/.cxx/cmake/debug/armeabi-v7a
-
 //Dependencies for target
 stockfish_LIB_DEPENDS:STATIC=
-
-//Value Computed by CMake
-stockfish_SOURCE_DIR:STATIC=/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/cpp
-
-//Dependencies for target
-stockfish_cpp_LIB_DEPENDS:STATIC=
 
 
 ########################
@@ -367,6 +355,4 @@ CMAKE_STRIP-ADVANCED:INTERNAL=1
 CMAKE_UNAME:INTERNAL=/usr/bin/uname
 //ADVANCED property for variable: CMAKE_VERBOSE_MAKEFILE
 CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: GIT_EXECUTABLE
-GIT_EXECUTABLE-ADVANCED:INTERNAL=1
 
