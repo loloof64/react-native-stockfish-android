@@ -1,0 +1,8 @@
+Executable : /home/laurent/Android/Sdk/cmake/3.10.2.4988404/bin/ninja
+arguments : 
+-C
+/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/.cxx/cmake/debug/armeabi-v7a
+nativeutil
+stockfish
+jvmArgs : 
+

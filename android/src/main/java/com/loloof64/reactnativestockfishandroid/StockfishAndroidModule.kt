@@ -21,7 +21,7 @@ class StockfishAndroidModule(reactContext: ReactApplicationContext) : ReactConte
   private var reactContext: ReactApplicationContext = reactContext
 
   override fun getName(): String {
-    return "StockfishAndroid"
+    return "Stockfish"
   }
 
 

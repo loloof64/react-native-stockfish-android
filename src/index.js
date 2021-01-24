@@ -1,3 +1,2 @@
-import { NativeModules } from 'react-native';
-const { StockfishAndroid } = NativeModules;
-export default StockfishAndroid;
+import Engine from './Engine';
+export default new Engine();
