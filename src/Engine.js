@@ -12,13 +12,13 @@ export default class Engine extends EngineBase {
 
       switch (response.type) {
         case 'bestMove':
-          this.emit('bestMove', {
+          DeviceEventEmitter.emit('bestMove', {
             bestMove: response.data.bestmove,
             ponderMove: response.data.ponder,
           });
           break;
         case 'info':
-          this.emit('info', response.data);
+          DeviceEventEmitter.emit('info', response.data);
           break;
 
         /**

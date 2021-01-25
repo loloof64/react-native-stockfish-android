@@ -7,7 +7,7 @@
       "isBuildOnlyTargetAbiEnabled": true,
       "splitsAbiFilterSet": [],
       "intermediatesFolder": "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/build/intermediates",
-      "gradleModulePathName": ":reactnativestockfishandroid",
+      "gradleModulePathName": ":reactnativestockfishandroidexample",
       "moduleRootFolder": "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android",
       "makeFile": "/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/CMakeLists.txt",
       "buildSystem": "CMAKE",

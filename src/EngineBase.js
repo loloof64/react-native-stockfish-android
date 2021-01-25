@@ -1,10 +1,8 @@
 import { NativeModules, DeviceEventEmitter } from 'react-native';
 const { Stockfish } = NativeModules;
-import EventEmitter from 'eventemitter2';
 
-export default class EngineBase extends EventEmitter {
+export default class EngineBase {
   constructor() {
-    super({});
     this.newGame();
     this.ready = Stockfish.createEngine();
   }

@@ -60,3 +60,4 @@ android/keystores/debug.keystore
 lib/
 
 cxx/
+react-native-stockfish-android*.tgz

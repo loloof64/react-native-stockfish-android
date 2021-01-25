@@ -1,21 +1,21 @@
 ninja: Entering directory `/home/laurent/Documents/Programmation/ProjetsPersos/ReactNative/Plugins/react-native-stockfish-android/android/.cxx/cmake/debug/armeabi-v7a'
-[1/32] Building CXX object CMakeFiles/stockfish.dir/cpp/stockfish/bitboard.cpp.o
-[2/32] Building CXX object CMakeFiles/stockfish.dir/cpp/stockfish/bitbase.cpp.o
+[1/32] Building CXX object CMakeFiles/stockfish.dir/cpp/stockfish/bitbase.cpp.o
+[2/32] Building CXX object CMakeFiles/stockfish.dir/cpp/stockfish/bitboard.cpp.o
 [3/32] Building CXX object CMakeFiles/stockfish.dir/cpp/stockfish/main.cpp.o
 [4/32] Building CXX object CMakeFiles/stockfish.dir/cpp/stockfish/benchmark.cpp.o
-[5/32] Building CXX object CMakeFiles/stockfish.dir/cpp/stockfish/material.cpp.o
-[6/32] Building CXX object CMakeFiles/stockfish.dir/cpp/stockfish/endgame.cpp.o
-[7/32] Building CXX object CMakeFiles/stockfish.dir/cpp/stockfish/movepick.cpp.o
+[5/32] Building CXX object CMakeFiles/stockfish.dir/cpp/stockfish/endgame.cpp.o
+[6/32] Building CXX object CMakeFiles/stockfish.dir/cpp/stockfish/material.cpp.o
+[7/32] Building CXX object CMakeFiles/stockfish.dir/cpp/stockfish/movegen.cpp.o
 [8/32] Building CXX object CMakeFiles/stockfish.dir/cpp/stockfish/misc.cpp.o
-[9/32] Building CXX object CMakeFiles/stockfish.dir/cpp/stockfish/evaluate.cpp.o
-[10/32] Building CXX object CMakeFiles/stockfish.dir/cpp/stockfish/movegen.cpp.o
+[9/32] Building CXX object CMakeFiles/stockfish.dir/cpp/stockfish/movepick.cpp.o
+[10/32] Building CXX object CMakeFiles/stockfish.dir/cpp/stockfish/evaluate.cpp.o
 [11/32] Building CXX object CMakeFiles/stockfish.dir/cpp/stockfish/psqt.cpp.o
 [12/32] Building CXX object CMakeFiles/stockfish.dir/cpp/stockfish/pawns.cpp.o
 [13/32] Building CXX object CMakeFiles/stockfish.dir/cpp/stockfish/position.cpp.o
 [14/32] Building CXX object CMakeFiles/stockfish.dir/cpp/stockfish/timeman.cpp.o
 [15/32] Building CXX object CMakeFiles/stockfish.dir/cpp/stockfish/tt.cpp.o
-[16/32] Building CXX object CMakeFiles/stockfish.dir/cpp/stockfish/tune.cpp.o
-[17/32] Building CXX object CMakeFiles/stockfish.dir/cpp/stockfish/thread.cpp.o
+[16/32] Building CXX object CMakeFiles/stockfish.dir/cpp/stockfish/thread.cpp.o
+[17/32] Building CXX object CMakeFiles/stockfish.dir/cpp/stockfish/tune.cpp.o
 [18/32] Building CXX object CMakeFiles/stockfish.dir/cpp/stockfish/search.cpp.o
 [19/32] Building CXX object CMakeFiles/nativeutil.dir/cpp/nativeutil/nativeutil.cpp.o
 [20/32] Building C object CMakeFiles/nativeutil.dir/cpp/nativeutil/cpu_features/src/filesystem.c.o
@@ -31,9 +31,9 @@ clang: warning: argument unused during compilation: '-s' [-Wunused-command-line-
 [25/32] Building C object CMakeFiles/nativeutil.dir/cpp/nativeutil/cpu_features/src/cpuinfo_arm.c.o
 clang: warning: argument unused during compilation: '-s' [-Wunused-command-line-argument]
 [26/32] Linking C shared library ../../../../build/intermediates/cmake/debug/obj/armeabi-v7a/libnativeutil.so
-[27/32] Building CXX object CMakeFiles/stockfish.dir/cpp/stockfish/ucioption.cpp.o
-[28/32] Building CXX object CMakeFiles/stockfish.dir/cpp/stockfish/nnue/features/half_kp.cpp.o
-[29/32] Building CXX object CMakeFiles/stockfish.dir/cpp/stockfish/nnue/evaluate_nnue.cpp.o
-[30/32] Building CXX object CMakeFiles/stockfish.dir/cpp/stockfish/uci.cpp.o
+[27/32] Building CXX object CMakeFiles/stockfish.dir/cpp/stockfish/nnue/evaluate_nnue.cpp.o
+[28/32] Building CXX object CMakeFiles/stockfish.dir/cpp/stockfish/ucioption.cpp.o
+[29/32] Building CXX object CMakeFiles/stockfish.dir/cpp/stockfish/uci.cpp.o
+[30/32] Building CXX object CMakeFiles/stockfish.dir/cpp/stockfish/nnue/features/half_kp.cpp.o
 [31/32] Building CXX object CMakeFiles/stockfish.dir/cpp/stockfish/syzygy/tbprobe.cpp.o
 [32/32] Linking CXX shared library ../../../../build/intermediates/cmake/debug/obj/armeabi-v7a/libstockfish.so
