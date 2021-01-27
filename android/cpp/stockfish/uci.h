@@ -16,11 +16,15 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+// Modified by loloof64
+
 #ifndef UCI_H_INCLUDED
 #define UCI_H_INCLUDED
 
 #include <map>
 #include <string>
+#include <queue>
+#include <functional>
 
 #include "types.h"
 
@@ -55,6 +59,11 @@ public:
   operator double() const;
   operator std::string() const;
   bool operator==(const char*) const;
+  size_t getIdx() const { return idx; };
+  std::string getType() const { return type; }
+  std::string getDefaultValue() const { return defaultValue; }
+  int getMin() const { return min; }
+  int getMax() const { return max; }
 
 private:
   friend std::ostream& operator<<(std::ostream&, const OptionsMap&);
@@ -66,13 +75,15 @@ private:
 };
 
 void init(OptionsMap&);
-void loop(int argc, char* argv[]);
+void loop(std::function<std::string(void)> inputCallback, std::function<void(std::string)> outputCallback);
 std::string value(Value v);
 std::string square(Square s);
 std::string move(Move m, bool chess960);
 std::string pv(const Position& pos, Depth depth, Value alpha, Value beta);
 std::string wdl(Value v, int ply);
 Move to_move(const Position& pos, std::string& str);
+
+std::string getOptionsString(const OptionsMap& om);
 
 } // namespace UCI
 

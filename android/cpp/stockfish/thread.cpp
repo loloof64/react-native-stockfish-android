@@ -32,7 +32,9 @@ ThreadPool Threads; // Global object
 /// Thread constructor launches the thread and waits until it goes to sleep
 /// in idle_loop(). Note that 'searching' and 'exit' should be already set.
 
-Thread::Thread(size_t n) : idx(n), stdThread(&Thread::idle_loop, this) {
+Thread::Thread(size_t n, std::function<void(std::string)> outputCallback) : idx(n), stdThread([this]() {
+    this->idle_loop();
+}), outputCallback(outputCallback) {
 
   wait_for_search_finished();
 }
@@ -116,7 +118,7 @@ void Thread::idle_loop() {
 
       lk.unlock();
 
-      search();
+      this->search();
   }
 }
 
@@ -124,7 +126,7 @@ void Thread::idle_loop() {
 /// Created and launched threads will immediately go to sleep in idle_loop.
 /// Upon resizing, threads are recreated to allow for binding if necessary.
 
-void ThreadPool::set(size_t requested) {
+void ThreadPool::set(size_t requested, std::function<void(std::string)> outputCallback) {
 
   if (size() > 0) { // destroy any existing thread(s)
       main()->wait_for_search_finished();
@@ -134,10 +136,10 @@ void ThreadPool::set(size_t requested) {
   }
 
   if (requested > 0) { // create new thread(s)
-      push_back(new MainThread(0));
+      push_back(new MainThread(0, outputCallback));
 
       while (size() < requested)
-          push_back(new Thread(size()));
+          push_back(new Thread(size(), outputCallback));
       clear();
 
       // Reallocate the hash with the new threadpool size

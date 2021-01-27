@@ -1,29 +1,37 @@
 import { NativeModules, DeviceEventEmitter } from 'react-native';
 const { Stockfish } = NativeModules;
+import EventEmitter from 'eventemitter2';
 
-export default class EngineBase {
+const DEFAULT_FEN = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
+
+export default class EngineBase extends EventEmitter {
   constructor() {
-    this.newGame();
-    this.ready = Stockfish.createEngine();
+    super({});
+    this.initializeStockfish();
   }
 
-  async newGame() {
-    await this.ready;
+  async initializeStockfish() {
+    try {
+      await Stockfish.startEngine();
+    } catch (err) {
+      console.error('Failed to start Stockfish: ' + err);
+    }
+  }
+
+  newGame(positionFen = DEFAULT_FEN) {
     Stockfish.sendCommand('stop');
     Stockfish.sendCommand('uci');
-    Stockfish.sendCommand('debug on');
     Stockfish.sendCommand('isready');
     Stockfish.sendCommand('ucinewgame');
     Stockfish.sendCommand('setoption name Ponder value false');
+    Stockfish.sendCommand('position fen ' + positionFen);
   }
 
-  async sendCommand(command) {
-    await this.ready;
+  sendCommand(command) {
     Stockfish.sendCommand(command);
   }
 
-  async commit() {
-    await this.ready;
-    Stockfish.commit();
+  stop() {
+    Stockfish.stopEngine();
   }
 }

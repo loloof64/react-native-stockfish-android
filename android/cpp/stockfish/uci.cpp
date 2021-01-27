@@ -16,11 +16,15 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+// Modified by loloof64
+
 #include <cassert>
 #include <cmath>
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <functional>
+#include <algorithm>
 
 #include "evaluate.h"
 #include "movegen.h"
@@ -79,7 +83,7 @@ namespace {
   // trace_eval() prints the evaluation for the current position, consistent with the UCI
   // options set so far.
 
-  void trace_eval(Position& pos) {
+  void trace_eval(Position& pos, std::function<void(std::string)> outputCallback) {
 
     StateListPtr states(new std::deque<StateInfo>(1));
     Position p;
@@ -87,14 +91,14 @@ namespace {
 
     Eval::NNUE::verify();
 
-    sync_cout << "\n" << Eval::trace(p) << sync_endl;
+    outputCallback(std::string("\n") + Eval::trace(p));
   }
 
 
   // setoption() is called when engine receives the "setoption" UCI command. The
   // function updates the UCI option ("name") to the given value ("value").
 
-  void setoption(istringstream& is) {
+  void setoption(istringstream& is,  std::function<void(std::string)> outputCallback) {
 
     string token, name, value;
 
@@ -111,7 +115,7 @@ namespace {
     if (Options.count(name))
         Options[name] = value;
     else
-        sync_cout << "No such option: " << name << sync_endl;
+        outputCallback(std::string("No such option: ") + name);
   }
 
 
@@ -153,7 +157,7 @@ namespace {
   // a list of UCI commands is setup according to bench parameters, then
   // it is run one by one printing a summary at the end.
 
-  void bench(Position& pos, istream& args, StateListPtr& states) {
+  void bench(Position& pos, istream& args, StateListPtr& states,  std::function<void(std::string)> outputCallback) {
 
     string token;
     uint64_t num, nodes = 0, cnt = 1;
@@ -178,9 +182,9 @@ namespace {
                nodes += Threads.nodes_searched();
             }
             else
-               trace_eval(pos);
+               trace_eval(pos, outputCallback);
         }
-        else if (token == "setoption")  setoption(is);
+        else if (token == "setoption")  setoption(is, outputCallback);
         else if (token == "position")   position(pos, is, states);
         else if (token == "ucinewgame") { Search::clear(); elapsed = now(); } // Search::clear() may take some while
     }
@@ -219,6 +223,30 @@ namespace {
 
 } // namespace
 
+std::string UCI::getOptionsString(const OptionsMap& om) {
+    std::string result;
+
+    for (size_t idx = 0; idx < om.size(); ++idx)
+      for (const auto& it : om)
+          if (it.second.getIdx() == idx)
+          {
+              const Option& o = it.second;
+              result += "\noption name " + it.first + " type " + o.getType();
+
+              if (o.getType() == "string" || o.getType() == "check" || o.getType() == "combo")
+                  result += " default " + o.getDefaultValue();
+
+              if (o.getType() == "spin")
+                  result +=  " default " + std::to_string(int(stof(o.getDefaultValue())))
+                     + " min "     + std::to_string(o.getMin())
+                     + " max "     + std::to_string(o.getMax());
+
+              break;
+          }
+
+  return result;
+}
+
 
 /// UCI::loop() waits for a command from stdin, parses it and calls the appropriate
 /// function. Also intercepts EOF from stdin to ensure gracefully exiting if the
@@ -226,7 +254,7 @@ namespace {
 /// run 'bench', once the command is executed the function returns immediately.
 /// In addition to the UCI ones, also some additional debug commands are supported.
 
-void UCI::loop(int argc, char* argv[]) {
+void UCI::loop(std::function<std::string(void)> inputCallback, std::function<void(std::string)> outputCallback) {
 
   Position pos;
   string token, cmd;
@@ -234,12 +262,13 @@ void UCI::loop(int argc, char* argv[]) {
 
   pos.set(StartFEN, false, &states->back(), Threads.main());
 
-  for (int i = 1; i < argc; ++i)
-      cmd += std::string(argv[i]) + " ";
+  cmd = inputCallback();
 
   do {
-      if (argc == 1 && !getline(cin, cmd)) // Block here waiting for input or EOF
-          cmd = "quit";
+      while (cmd.find("#ERROR", 0)) {
+          // Block here waiting for input or EOF
+         cmd = inputCallback();
+      }
 
       istringstream is(cmd);
 
@@ -247,8 +276,11 @@ void UCI::loop(int argc, char* argv[]) {
       is >> skipws >> token;
 
       if (    token == "quit"
-          ||  token == "stop")
-          Threads.stop = true;
+          ||  token == "stop") {
+              Threads.stop = true;
+              break;
+          }
+          
 
       // The GUI sends 'ponderhit' to tell us the user has played the expected move.
       // So 'ponderhit' will be sent if we were told to ponder on the same move the
@@ -258,27 +290,25 @@ void UCI::loop(int argc, char* argv[]) {
           Threads.main()->ponder = false; // Switch to normal search
 
       else if (token == "uci")
-          sync_cout << "id name " << engine_info(true)
-                    << "\n"       << Options
-                    << "\nuciok"  << sync_endl;
+          outputCallback(std::string("id name ") + engine_info(true) + "\n" + getOptionsString(Options) + "\nuciok");
 
-      else if (token == "setoption")  setoption(is);
+      else if (token == "setoption")  setoption(is, outputCallback);
       else if (token == "go")         go(pos, is, states);
       else if (token == "position")   position(pos, is, states);
       else if (token == "ucinewgame") Search::clear();
-      else if (token == "isready")    sync_cout << "readyok" << sync_endl;
+      else if (token == "isready")    outputCallback("readyok");
 
       // Additional custom non-UCI commands, mainly for debugging.
       // Do not use these commands during a search!
       else if (token == "flip")     pos.flip();
-      else if (token == "bench")    bench(pos, is, states);
-      else if (token == "d")        sync_cout << pos << sync_endl;
-      else if (token == "eval")     trace_eval(pos);
-      else if (token == "compiler") sync_cout << compiler_info() << sync_endl;
+      else if (token == "bench")    bench(pos, is, states, outputCallback);
+      else if (token == "d")        outputCallback(pos.fen());
+      else if (token == "eval")     trace_eval(pos, outputCallback);
+      else if (token == "compiler") outputCallback(compiler_info());
       else
-          sync_cout << "Unknown command: " << cmd << sync_endl;
+          outputCallback(std::string("Unknown command: ") + cmd);
 
-  } while (token != "quit" && argc == 1); // Command line args are one-shot
+  } while (true); // Command line args are one-shot
 }
 
 

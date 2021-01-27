@@ -8,17 +8,22 @@ export default class Engine extends EngineBase {
     super();
 
     DeviceEventEmitter.addListener('engine_data', (data) => {
+      ///////////////////////////////////
+      console.log('Got data');
+      console.log(data);
+      ///////////////////////////////////////
+
       const response = parseEngineReponse(data);
 
       switch (response.type) {
         case 'bestMove':
-          DeviceEventEmitter.emit('bestMove', {
+          this.emit('bestMove', {
             bestMove: response.data.bestmove,
             ponderMove: response.data.ponder,
           });
           break;
         case 'info':
-          DeviceEventEmitter.emit('info', response.data);
+          this.emit('info', response.data);
           break;
 
         /**

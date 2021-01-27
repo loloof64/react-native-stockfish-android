@@ -6,17 +6,26 @@ import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.modules.core.DeviceEventManagerModule.RCTDeviceEventEmitter
-import org.petero.droidfish.EngineOptions
-import org.petero.droidfish.engine.UCIEngine
-import org.petero.droidfish.engine.UCIEngine.Report
-import org.petero.droidfish.engine.UCIEngineBase
 
 
 class StockfishAndroidModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
 
-  protected var engineMonitor: Thread? = null
+  companion object  Library{
+    fun loadStockfish() {
+        System.loadLibrary("stockfish")
+    }
 
-  private var engine: UCIEngine? = null
+    external fun readNextOutputLine() : String;
+    external fun  sendCommand(command: String);
+    external fun  main();
+  }
+
+  private var isReady = false
+  private lateinit var readerThread: Thread
+
+  init {
+    loadStockfish()
+  }
 
   private var reactContext: ReactApplicationContext = reactContext
 
@@ -26,73 +35,55 @@ class StockfishAndroidModule(reactContext: ReactApplicationContext) : ReactConte
 
 
   @ReactMethod
-  fun createEngine(promise: Promise) {
+  fun startEngine(promise: Promise) {
     Log.d("SStockfish", "startEngine")
-    engine = UCIEngineBase.getEngine(reactContext, "stockfish", EngineOptions(), object : Report {
-      override fun reportError(errMsg: String) {
-        var errMsg: String? = errMsg
-        if (errMsg == null) errMsg = ""
-        Log.d("SStockfish", errMsg)
-      }
+    try {
+      val mainThread = Thread { main() }
+      readerThread = Thread {readStockfishOutput()}
 
-      fun reportStdOut(stdOutLine: String?) {
-        var stdOutLine = stdOutLine
-        if (stdOutLine == null) stdOutLine = ""
-        Log.d("SStockfish", stdOutLine)
-      }
-    })
-    Log.d("SStockfish", "startEngine preinit")
-    engine!!.initialize()
-    engineMonitor = Thread { monitorLoop(engine!!) }
-    engineMonitor!!.start()
-    promise.resolve(null)
+      mainThread.start()
+      readerThread.start()
+      
+      sendCommand("isready")
+      promise.resolve("Successfully launched Stockfish")
+    }
+    catch (ex: Exception) {
+      promise.reject("Error when launching Stockfish", ex)
+    }
   }
 
-  protected fun monitorLoop(engine: UCIEngine) {
+  protected fun readStockfishOutput() {
     while (true) {
-      val timeout = getReadTimeout()
       if (Thread.currentThread().isInterrupted) return
-      val s = engine.readLineFromEngine(timeout)
-      if (s == null || Thread.currentThread().isInterrupted) return
-      if (s.length > 0) {
-        Log.d("SStockfish", s)
-        reactContext
-          .getJSModule(RCTDeviceEventEmitter::class.java)
-          .emit("engine_data", s)
-      }
+      val output = readNextOutputLine();
+      if (output.startsWith("#ERROR")) continue;
       if (Thread.currentThread().isInterrupted) return
-      // notifyGUI();
+      Log.d("SStockfish", output)
       if (Thread.currentThread().isInterrupted) return
+      processOutputAsCommand(output)
     }
   }
 
-  @Synchronized
-  private fun getReadTimeout(): Int {
-    return 400
-  }
-
-  @Synchronized
-  fun shutdownEngine() {
-    if (engine != null) {
-      engineMonitor!!.interrupt()
-      engineMonitor = null
-      engine!!.shutDown()
-      engine = null
+  protected fun processOutputAsCommand(output: String) {
+    if (output == "readyok") isReady = true
+    else if (isReady) {
+      reactContext
+        .getJSModule(RCTDeviceEventEmitter::class.java)
+        .emit("engine_data", output)
     }
   }
 
   @ReactMethod
-  fun sendCommand(command: String?) {
-    engine!!.writeLineToEngine(command)
+  fun sendCommand(command: String) {
+    Log.d("SStockfish", "Sending command '${command}'")
+    sendCommand(command)
   }
 
   @ReactMethod
-  fun commit() {
-  } // for ios compat
-
-
-  @ReactMethod
-  fun stop() {
+  fun stopEngine() {
+    Log.d("SStockfish", "stopEngine")
+    readerThread.interrupt()
+    sendCommand("quit")
   }
 
 }

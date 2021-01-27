@@ -24,6 +24,8 @@
 #include <mutex>
 #include <thread>
 #include <vector>
+#include <functional>
+#include <string>
 
 #include "material.h"
 #include "movepick.h"
@@ -47,7 +49,7 @@ class Thread {
   NativeThread stdThread;
 
 public:
-  explicit Thread(size_t);
+  explicit Thread(size_t, std::function<void(std::string)> outputCallback);
   virtual ~Thread();
   virtual void search();
   void clear();
@@ -73,6 +75,8 @@ public:
   CapturePieceToHistory captureHistory;
   ContinuationHistory continuationHistory[2][2];
   Score contempt;
+protected:
+  std::function<void(std::string)> outputCallback;
 };
 
 
@@ -102,7 +106,7 @@ struct ThreadPool : public std::vector<Thread*> {
 
   void start_thinking(Position&, StateListPtr&, const Search::LimitsType&, bool = false);
   void clear();
-  void set(size_t);
+  void set(size_t, std::function<void(std::string)> outputCallback);
 
   MainThread* main()        const { return static_cast<MainThread*>(front()); }
   uint64_t nodes_searched() const { return accumulate(&Thread::nodes); }

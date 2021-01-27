@@ -22,6 +22,8 @@
 #include <cstring>   // For std::memset
 #include <iostream>
 #include <sstream>
+#include <functional>
+#include <string>
 
 #include "evaluate.h"
 #include "misc.h"
@@ -34,6 +36,9 @@
 #include "tt.h"
 #include "uci.h"
 #include "syzygy/tbprobe.h"
+#include "mainIO.h"
+
+extern std::queue<std::string> ouptutLines;
 
 namespace Search {
 
@@ -145,7 +150,7 @@ namespace {
   };
 
   template <NodeType NT>
-  Value search(Position& pos, Stack* ss, Value alpha, Value beta, Depth depth, bool cutNode);
+  Value search(Position& pos, Stack* ss, Value alpha, Value beta, Depth depth, bool cutNode, std::function<void(std::string)> outputCallback);
 
   template <NodeType NT>
   Value qsearch(Position& pos, Stack* ss, Value alpha, Value beta, Depth depth = 0);
@@ -217,7 +222,7 @@ void MainThread::search() {
   if (Limits.perft)
   {
       nodes = perft<true>(rootPos, Limits.perft);
-      sync_cout << "\nNodes searched: " << nodes << "\n" << sync_endl;
+      outputCallback(std::string("\nNodes searched: ") + std::to_string(nodes) + "\n");
       return;
   }
 
@@ -230,9 +235,8 @@ void MainThread::search() {
   if (rootMoves.empty())
   {
       rootMoves.emplace_back(MOVE_NONE);
-      sync_cout << "info depth 0 score "
-                << UCI::value(rootPos.checkers() ? -VALUE_MATE : VALUE_DRAW)
-                << sync_endl;
+      outputCallback(std::string("info depth 0 score ")
+             + UCI::value(rootPos.checkers() ? -VALUE_MATE : VALUE_DRAW));
   }
   else
   {
@@ -273,14 +277,12 @@ void MainThread::search() {
 
   // Send again PV info if we have a new best thread
   if (bestThread != this)
-      sync_cout << UCI::pv(bestThread->rootPos, bestThread->completedDepth, -VALUE_INFINITE, VALUE_INFINITE) << sync_endl;
+      outputCallback(UCI::pv(bestThread->rootPos, bestThread->completedDepth, -VALUE_INFINITE, VALUE_INFINITE));
 
-  sync_cout << "bestmove " << UCI::move(bestThread->rootMoves[0].pv[0], rootPos.is_chess960());
+  outputCallback(std::string("bestmove ") + UCI::move(bestThread->rootMoves[0].pv[0], rootPos.is_chess960()));
 
   if (bestThread->rootMoves[0].pv.size() > 1 || bestThread->rootMoves[0].extract_ponder_from_tt(rootPos))
-      std::cout << " ponder " << UCI::move(bestThread->rootMoves[0].pv[1], rootPos.is_chess960());
-
-  std::cout << sync_endl;
+      outputCallback(std::string(" ponder ")+ UCI::move(bestThread->rootMoves[0].pv[1], rootPos.is_chess960()));
 }
 
 
@@ -421,7 +423,9 @@ void Thread::search() {
           while (true)
           {
               Depth adjustedDepth = std::max(1, rootDepth - failedHighCnt - searchAgainCounter);
-              bestValue = ::search<PV>(rootPos, ss, alpha, beta, adjustedDepth, false);
+              bestValue = ::search<PV>(rootPos, ss, alpha, beta, adjustedDepth, false, [&](std::string output) {
+                    ::ouptutLines.push(output);
+                });
 
               // Bring the best move to the front. It is critical that sorting
               // is done with a stable algorithm because all the values but the
@@ -443,7 +447,7 @@ void Thread::search() {
                   && multiPV == 1
                   && (bestValue <= alpha || bestValue >= beta)
                   && Time.elapsed() > 3000)
-                  sync_cout << UCI::pv(rootPos, rootDepth, alpha, beta) << sync_endl;
+                  outputCallback(UCI::pv(rootPos, rootDepth, alpha, beta));
 
               // In case of failing low/high increase aspiration window and
               // re-search, otherwise exit the loop.
@@ -474,7 +478,7 @@ void Thread::search() {
 
           if (    mainThread
               && (Threads.stop || pvIdx + 1 == multiPV || Time.elapsed() > 3000))
-              sync_cout << UCI::pv(rootPos, rootDepth, alpha, beta) << sync_endl;
+              outputCallback(UCI::pv(rootPos, rootDepth, alpha, beta));
       }
 
       if (!Threads.stop)
@@ -561,7 +565,7 @@ namespace {
   // search<>() is the main search function for both PV and non-PV nodes
 
   template <NodeType NT>
-  Value search(Position& pos, Stack* ss, Value alpha, Value beta, Depth depth, bool cutNode) {
+  Value search(Position& pos, Stack* ss, Value alpha, Value beta, Depth depth, bool cutNode,  std::function<void(std::string)> outputCallback) {
 
     constexpr bool PvNode = NT == PV;
     const bool rootNode = PvNode && ss->ply == 0;
@@ -836,7 +840,9 @@ namespace {
 
         pos.do_null_move(st);
 
-        Value nullValue = -search<NonPV>(pos, ss+1, -beta, -beta+1, depth-R, !cutNode);
+        Value nullValue = -search<NonPV>(pos, ss+1, -beta, -beta+1, depth-R, !cutNode, [&](std::string output) {
+                    ::ouptutLines.push(output);
+                });
 
         pos.undo_null_move();
 
@@ -856,7 +862,9 @@ namespace {
             thisThread->nmpMinPly = ss->ply + 3 * (depth-R) / 4;
             thisThread->nmpColor = us;
 
-            Value v = search<NonPV>(pos, ss, beta-1, beta, depth-R, false);
+            Value v = search<NonPV>(pos, ss, beta-1, beta, depth-R, false, [&](std::string output) {
+                    ::ouptutLines.push(output);
+                });
 
             thisThread->nmpMinPly = 0;
 
@@ -921,7 +929,9 @@ namespace {
 
                 // If the qsearch held, perform the regular search
                 if (value >= probCutBeta)
-                    value = -search<NonPV>(pos, ss+1, -probCutBeta, -probCutBeta+1, depth - 4, !cutNode);
+                    value = -search<NonPV>(pos, ss+1, -probCutBeta, -probCutBeta+1, depth - 4, !cutNode, [&](std::string output) {
+                    ::ouptutLines.push(output);
+                });
 
                 pos.undo_move(move);
 
@@ -993,9 +1003,9 @@ moves_loop: // When in check, search starts from here
       ss->moveCount = ++moveCount;
 
       if (rootNode && thisThread == Threads.main() && Time.elapsed() > 3000)
-          sync_cout << "info depth " << depth
-                    << " currmove " << UCI::move(move, pos.is_chess960())
-                    << " currmovenumber " << moveCount + thisThread->pvIdx << sync_endl;
+          outputCallback(std::string("info depth ") + std::to_string(depth)
+                    + " currmove " + UCI::move(move, pos.is_chess960())
+                    + " currmovenumber " + std::to_string(moveCount) + std::to_string(thisThread->pvIdx));
       if (PvNode)
           (ss+1)->pv = nullptr;
 
@@ -1083,7 +1093,9 @@ moves_loop: // When in check, search starts from here
           Value singularBeta = ttValue - ((formerPv + 4) * depth) / 2;
           Depth singularDepth = (depth - 1 + 3 * formerPv) / 2;
           ss->excludedMove = move;
-          value = search<NonPV>(pos, ss, singularBeta - 1, singularBeta, singularDepth, cutNode);
+          value = search<NonPV>(pos, ss, singularBeta - 1, singularBeta, singularDepth, cutNode, [&](std::string output) {
+                    ::ouptutLines.push(output);
+                });
           ss->excludedMove = MOVE_NONE;
 
           if (value < singularBeta)
@@ -1105,7 +1117,9 @@ moves_loop: // When in check, search starts from here
           else if (ttValue >= beta)
           {
               ss->excludedMove = move;
-              value = search<NonPV>(pos, ss, beta - 1, beta, (depth + 3) / 2, cutNode);
+              value = search<NonPV>(pos, ss, beta - 1, beta, (depth + 3) / 2, cutNode, [&](std::string output) {
+                    ::ouptutLines.push(output);
+                });
               ss->excludedMove = MOVE_NONE;
 
               if (value >= beta)
@@ -1227,7 +1241,9 @@ moves_loop: // When in check, search starts from here
 
           Depth d = std::clamp(newDepth - r, 1, newDepth);
 
-          value = -search<NonPV>(pos, ss+1, -(alpha+1), -alpha, d, true);
+          value = -search<NonPV>(pos, ss+1, -(alpha+1), -alpha, d, true, [&](std::string output) {
+                    ::ouptutLines.push(output);
+                });
 
           doFullDepthSearch = value > alpha && d != newDepth;
 
@@ -1243,7 +1259,9 @@ moves_loop: // When in check, search starts from here
       // Step 17. Full depth search when LMR is skipped or fails high
       if (doFullDepthSearch)
       {
-          value = -search<NonPV>(pos, ss+1, -(alpha+1), -alpha, newDepth, !cutNode);
+          value = -search<NonPV>(pos, ss+1, -(alpha+1), -alpha, newDepth, !cutNode, [&](std::string output) {
+                    ::ouptutLines.push(output);
+                });
 
           if (didLMR && !captureOrPromotion)
           {
@@ -1265,7 +1283,9 @@ moves_loop: // When in check, search starts from here
           (ss+1)->pv = pv;
           (ss+1)->pv[0] = MOVE_NONE;
 
-          value = -search<PV>(pos, ss+1, -beta, -alpha, newDepth, false);
+          value = -search<PV>(pos, ss+1, -beta, -alpha, newDepth, false, [&](std::string output) {
+                    ::ouptutLines.push(output);
+                });
       }
 
       // Step 18. Undo move

@@ -16,7 +16,11 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+// Modified by loloof64
+
 #include <iostream>
+#include <queue>
+#include <string>
 
 #include "bitboard.h"
 #include "endgame.h"
@@ -26,16 +30,18 @@
 #include "tt.h"
 #include "uci.h"
 #include "syzygy/tbprobe.h"
+#include "mainIO.h"
 
 namespace PSQT {
   void init();
 }
 
-int main(int argc, char* argv[]) {
+extern std::queue<std::string> ouptutLines;
+extern std::queue<std::string> inputCommands;
 
+int main() {
   std::cout << engine_info() << std::endl;
 
-  CommandLine::init(argc, argv);
   UCI::init(Options);
   Tune::init();
   PSQT::init();
@@ -43,12 +49,23 @@ int main(int argc, char* argv[]) {
   Position::init();
   Bitbases::init();
   Endgames::init();
-  Threads.set(size_t(Options["Threads"]));
+  Threads.set(size_t(Options["Threads"]),  [&](std::string output) {
+    ::ouptutLines.push(output);
+  });
   Search::clear(); // After threads are up
   Eval::NNUE::init();
 
-  UCI::loop(argc, argv);
+  UCI::loop([&](){
+    if (::inputCommands.empty()) {
+      return std::string("#ERROR: no available line to read !");
+    }
+    return ::inputCommands.front();
+  },  [&](std::string output) {
+    ::ouptutLines.push(output);
+  });
 
-  Threads.set(0);
+  Threads.set(0,  [&](std::string output) {
+    ::ouptutLines.push(output);
+  });
   return 0;
 }

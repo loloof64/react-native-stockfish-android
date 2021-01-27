@@ -18,14 +18,6 @@ import {
 } from 'react-native';
 import Engine from 'react-native-stockfish-android';
 
-// DeviceEventEmitter.addListener('pv', pv => console.log('pv', pv));
-// DeviceEventEmitter.addListener('bestMove', moves => {
-//   console.log('bestMove', moves);
-// });
-// DeviceEventEmitter.addListener('eval', result => {
-//   console.log(result);
-// });
-
 export default class App extends Component {
   state = {
     depth: 0,
@@ -87,6 +79,10 @@ export default class App extends Component {
   score(score) {
     const {baseTurn} = this.state;
     return ((baseTurn === 'b' ? -1 : 1) * score) / 100;
+  }
+
+  componentWillUnmount() {
+    Engine.stop();
   }
 
   render() {

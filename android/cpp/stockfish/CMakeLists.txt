@@ -1,5 +1,7 @@
 add_library(stockfish
             SHARED
+            ${CMAKE_SOURCE_DIR}/cpp/stockfish/cpp-adapter.cpp
+            ${CMAKE_SOURCE_DIR}/cpp/stockfish/mainIO.cpp
             ${CMAKE_SOURCE_DIR}/cpp/stockfish/benchmark.cpp
             ${CMAKE_SOURCE_DIR}/cpp/stockfish/bitbase.cpp
             ${CMAKE_SOURCE_DIR}/cpp/stockfish/bitboard.cpp
