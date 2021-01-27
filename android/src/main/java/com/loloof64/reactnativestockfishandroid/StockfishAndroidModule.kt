@@ -74,7 +74,7 @@ class StockfishAndroidModule(reactContext: ReactApplicationContext) : ReactConte
   }
 
   @ReactMethod
-  fun sendCommand(command: String) {
+  fun launchCommand(command: String) {
     Log.d("SStockfish", "Sending command '${command}'")
     sendCommand(command)
   }

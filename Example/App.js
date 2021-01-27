@@ -64,16 +64,14 @@ export default class App extends Component {
     this.setState((state) => ({
       baseTurn: state.moves.split(' ').length % 2 ? 'w' : 'b',
     }));
-    Engine.sendCommand(`position startpos moves ${this.state.moves}`);
-    Engine.sendCommand('setoption name Skill Level value 20');
-    Engine.sendCommand('setoption name MultiPV value 3');
-    Engine.sendCommand('go mindepth 8 movetime 30000');
-    Engine.commit();
+    Engine.launchCommand(`position startpos moves ${this.state.moves}`);
+    Engine.launchCommand('setoption name Skill Level value 20');
+    Engine.launchCommand('setoption name MultiPV value 3');
+    Engine.launchCommand('go mindepth 8 movetime 30000');
   }
 
   handleStop() {
-    Engine.sendCommand('stop');
-    Engine.commit();
+    Engine.launchCommand('stop');
   }
 
   score(score) {

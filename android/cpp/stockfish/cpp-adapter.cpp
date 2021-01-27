@@ -13,7 +13,7 @@ Java_com_loloof64_reactnativestockfishandroid_StockfishAndroidModule_00024Librar
 }
 
 extern "C" JNIEXPORT void JNICALL
-Java_com_loloof64_reactnativestockfishandroid_StockfishAndroidModule_00024Library_sendCommand(JNIEnv *env, jstring command)
+Java_com_loloof64_reactnativestockfishandroid_StockfishAndroidModule_00024Library_sendCommand(JNIEnv *env, jobject thiz, jstring command)
 {
     jboolean madeCopy;
     const char *str = env->GetStringUTFChars(command, &madeCopy);

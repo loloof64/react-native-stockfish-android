@@ -19,16 +19,16 @@ export default class EngineBase extends EventEmitter {
   }
 
   newGame(positionFen = DEFAULT_FEN) {
-    Stockfish.sendCommand('stop');
-    Stockfish.sendCommand('uci');
-    Stockfish.sendCommand('isready');
-    Stockfish.sendCommand('ucinewgame');
-    Stockfish.sendCommand('setoption name Ponder value false');
-    Stockfish.sendCommand('position fen ' + positionFen);
+    Stockfish.launchCommand('stop');
+    Stockfish.launchCommand('uci');
+    Stockfish.launchCommand('isready');
+    Stockfish.launchCommand('ucinewgame');
+    Stockfish.launchCommand('setoption name Ponder value false');
+    Stockfish.launchCommand('position fen ' + positionFen);
   }
 
-  sendCommand(command) {
-    Stockfish.sendCommand(command);
+  launchCommand(command) {
+    Stockfish.launchCommand(command);
   }
 
   stop() {
