@@ -7,7 +7,11 @@ std::string readNextOutputLine() {
   if (ouptutLines.empty()) {
       return std::string("#ERROR: no available line to read !");
   }
-  return ouptutLines.front();
+  
+  std::string line(ouptutLines.front());
+  ouptutLines.pop();
+
+  return line;
 }
 
 void sendCommand(std::string command) {

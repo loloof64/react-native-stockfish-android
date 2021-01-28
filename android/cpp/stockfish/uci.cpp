@@ -25,6 +25,8 @@
 #include <string>
 #include <functional>
 #include <algorithm>
+#include <thread>
+#include <chrono> 
 
 #include "evaluate.h"
 #include "movegen.h"
@@ -265,9 +267,13 @@ void UCI::loop(std::function<std::string(void)> inputCallback, std::function<voi
   cmd = inputCallback();
 
   do {
+      // Block here waiting for input or EOF    
       while (cmd.find("#ERROR", 0)) {
-          // Block here waiting for input or EOF
+          std::this_thread::sleep_for (std::chrono::milliseconds(100));
          cmd = inputCallback();
+         ///////////////////////////////////////////
+         outputCallback(std::string("Got input command: ") + cmd);
+         ///////////////////////////////////////////
       }
 
       istringstream is(cmd);

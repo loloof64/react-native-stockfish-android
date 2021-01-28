@@ -1,2 +1,2 @@
-import Engine from './Engine';
-export default new Engine();
+import EngineWrapper from './EngineWrapper';
+export default new EngineWrapper();

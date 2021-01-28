@@ -1,6 +1,5 @@
 package com.loloof64.reactnativestockfishandroid
 
-import android.util.Log
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
@@ -36,7 +35,7 @@ class StockfishAndroidModule(reactContext: ReactApplicationContext) : ReactConte
 
   @ReactMethod
   fun startEngine(promise: Promise) {
-    Log.d("SStockfish", "startEngine")
+    println("startEngine")
     try {
       val mainThread = Thread { main() }
       readerThread = Thread {readStockfishOutput()}
@@ -44,6 +43,7 @@ class StockfishAndroidModule(reactContext: ReactApplicationContext) : ReactConte
       mainThread.start()
       readerThread.start()
       
+      sendCommand("uci")
       sendCommand("isready")
       promise.resolve("Successfully launched Stockfish")
     }
@@ -58,30 +58,32 @@ class StockfishAndroidModule(reactContext: ReactApplicationContext) : ReactConte
       val output = readNextOutputLine();
       if (output.startsWith("#ERROR")) continue;
       if (Thread.currentThread().isInterrupted) return
-      Log.d("SStockfish", output)
-      if (Thread.currentThread().isInterrupted) return
       processOutputAsCommand(output)
     }
   }
 
   protected fun processOutputAsCommand(output: String) {
-    if (output == "readyok") isReady = true
-    else if (isReady) {
+    println("Output from stockfish: $output");
+    if (output == "readyok") isReady = true;
       reactContext
         .getJSModule(RCTDeviceEventEmitter::class.java)
         .emit("engine_data", output)
-    }
+  }
+
+  @ReactMethod
+  fun ready() : Boolean {
+    return isReady
   }
 
   @ReactMethod
   fun launchCommand(command: String) {
-    Log.d("SStockfish", "Sending command '${command}'")
+    println("Sending command '${command}'")
     sendCommand(command)
   }
 
   @ReactMethod
   fun stopEngine() {
-    Log.d("SStockfish", "stopEngine")
+    println("stopEngine")
     readerThread.interrupt()
     sendCommand("quit")
   }

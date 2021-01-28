@@ -7,17 +7,19 @@ Java_com_loloof64_reactnativestockfishandroid_StockfishAndroidModule_00024Librar
 {
     std::string result = readNextOutputLine();
 
-    return env->NewString(
-        (const jchar *)result.c_str(),
-        (jsize)result.length());
+    return env->NewStringUTF(
+        result.c_str()
+    );
 }
 
 extern "C" JNIEXPORT void JNICALL
 Java_com_loloof64_reactnativestockfishandroid_StockfishAndroidModule_00024Library_sendCommand(JNIEnv *env, jobject thiz, jstring command)
 {
-    jboolean madeCopy;
-    const char *str = env->GetStringUTFChars(command, &madeCopy);
+    jboolean isCopy;
+    const char *str = env->GetStringUTFChars(command, &isCopy);
+    if (str == NULL) return;
     std::string commandString(str);
+    env->ReleaseStringUTFChars(command, str);
 
     sendCommand(commandString);
 }

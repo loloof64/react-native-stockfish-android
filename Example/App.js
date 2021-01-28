@@ -17,6 +17,7 @@ import {
   DeviceEventEmitter,
 } from 'react-native';
 import Engine from 'react-native-stockfish-android';
+const EventEmitter2 = require('eventemitter2');
 
 export default class App extends Component {
   state = {
@@ -33,8 +34,9 @@ export default class App extends Component {
 
   constructor() {
     super();
+    this.eventListener = new EventEmitter2({});
 
-    DeviceEventEmitter.addListener('info', (info) => {
+    this.eventListener.on('info', (info) => {
       const i = info.multipv - 1;
       const nextInfo = [...this.state.info];
       nextInfo[i] = {
@@ -53,7 +55,7 @@ export default class App extends Component {
       }
     });
 
-    DeviceEventEmitter.addListener('bestMove', ({bestMove, score}) => {
+    this.eventListener.on('bestMove', ({bestMove, score}) => {
       this.setState((state) => ({
         moves: state.moves + ' ' + bestMove,
       }));
@@ -64,9 +66,7 @@ export default class App extends Component {
     this.setState((state) => ({
       baseTurn: state.moves.split(' ').length % 2 ? 'w' : 'b',
     }));
-    Engine.launchCommand(`position startpos moves ${this.state.moves}`);
-    Engine.launchCommand('setoption name Skill Level value 20');
-    Engine.launchCommand('setoption name MultiPV value 3');
+    Engine.newGame();
     Engine.launchCommand('go mindepth 8 movetime 30000');
   }
 
