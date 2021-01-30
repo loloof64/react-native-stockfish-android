@@ -4,19 +4,12 @@ import parseIntValue from './parseIntValue';
 
 const stockfishEventEmitter = new NativeEventEmitter(Stockfish);
 
-const EventEmitter2 = require('eventemitter2');
-
 const DEFAULT_FEN = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
 
 export default class EngineWrapper {
   constructor() {
     this.setupNativeEventSubscription();
-    this.setupEventEmitter();
     this.initializeStockfish();
-  }
-
-  setupEventEmitter() {
-    this.emitter = new EventEmitter2({});
   }
 
   async initializeStockfish() {
@@ -25,6 +18,15 @@ export default class EngineWrapper {
     } catch (err) {
       console.error('Failed to start Stockfish: ' + err);
     }
+  }
+
+  /*
+   callback should be a function taking
+   -> type as string (1st parameter)
+   -> data as object
+   */
+  setEventCallback(callback) {
+    this.eventCallback = callback;
   }
 
   setupNativeEventSubscription() {
@@ -38,13 +40,13 @@ export default class EngineWrapper {
 
         switch (response.type) {
           case 'bestMove':
-            this.emitter.emit('bestMove', {
+            this.eventCallback('bestMove', {
               bestMove: response.data.bestmove,
               ponderMove: response.data.ponder,
             });
             break;
           case 'info':
-            this.emitter.emit('info', response.data);
+            this.eventCallback('info', response.data);
             break;
         }
       }

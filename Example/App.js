@@ -12,16 +12,16 @@ import {
   View,
   TextInput,
   Button,
+  ScrollView,
 } from 'react-native';
 import Engine from 'react-native-stockfish-android';
-const EventEmitter2 = require('eventemitter2');
 
 export default class App extends Component {
   state = {
     depth: 0,
     score: 0,
-    command: '',
-    bestMove: '',
+    moves: '',
+    baseTurn: 'w',
     info: [
       {score: 0, pv: ''},
       {score: 0, pv: ''},
@@ -31,9 +31,15 @@ export default class App extends Component {
 
   constructor() {
     super();
-    this.eventListener = new EventEmitter2({});
+    Engine.setEventCallback(this.processEvent);
+  }
 
-    this.eventListener.on('info', (info) => {
+  processEvent(type, data) {
+    ////////////////////////////////////
+    console.log(type, data);
+    ///////////////////////////////////////
+    if (type === 'info') {
+      const info = data;
       const i = info.multipv - 1;
       const nextInfo = [...this.state.info];
       nextInfo[i] = {
@@ -50,18 +56,20 @@ export default class App extends Component {
           score: this.score(info.score),
         });
       }
-    });
-
-    this.eventListener.on('bestMove', ({bestMove, score}) => {
+    } else if (type === 'bestMove') {
+      const {bestMove, score} = data;
       this.setState((state) => ({
-        bestMove,
+        moves: state.moves + '  ' + bestMove,
       }));
-    });
+    }
   }
 
   handleAnalyze() {
+    this.setState((state) => ({
+      baseTurn: state.moves.split(' ').length % 2 ? 'w' : 'b',
+    }));
     Engine.newGame();
-    Engine.launchCommand(this.state.command);
+    Engine.launchCommand('go depth 8 movetime 30000');
   }
 
   handleStop() {
@@ -69,7 +77,8 @@ export default class App extends Component {
   }
 
   score(score) {
-    return score / 100;
+    const {baseTurn} = this.state;
+    return ((baseTurn === 'b' ? -1 : 1) * score) / 100;
   }
 
   componentWillUnmount() {
@@ -87,18 +96,39 @@ export default class App extends Component {
         <Text>
           Score: {this.state.score} | Depth: {this.state.depth}
         </Text>
-        {this.state.info.map((info, i) => (
-          <View key={i} style={{}}>
-            <Text>
-              <Text style={{fontWeight: 'bold'}}>{info.score}</Text> {info.pv}
-            </Text>
-          </View>
-        ))}
-        <Text style={styles.bestmove}>{this.state.bestMove}</Text>
+        <ScrollView
+          automaticallyAdjustContentInsets={false}
+          horizontal
+          style={{
+            position: 'absolute',
+            left: 0,
+            right: 0,
+            bottom: 0,
+          }}
+          contentContainerStyle={{
+            flexDirection: 'column',
+            padding: 10,
+          }}>
+          {this.state.info.map((info, i) => (
+            <View key={i} style={{}}>
+              <Text>
+                <Text style={{fontWeight: 'bold'}}>{info.score}</Text> {info.pv}
+              </Text>
+            </View>
+          ))}
+        </ScrollView>
         <TextInput
-          placeholder="Your command"
-          value={this.state.command}
-          onChangeText={(command) => this.setState({command})}
+          style={{
+            width: 300,
+            height: 200,
+            backgroundColor: '#fff',
+            borderColor: '#ccc',
+            borderWidth: 1,
+          }}
+          multiline
+          value={this.state.moves}
+          onChangeText={(moves) => this.setState({moves})}
+          autoCapitalize="none"
         />
         <Button onPress={() => this.handleStop()} title="Stop" />
       </View>
@@ -111,7 +141,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#F5FCFF',
     paddingTop: 50,
-    justifyContent: 'space-between',
   },
   welcome: {
     fontSize: 20,
@@ -122,8 +151,5 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#333333',
     marginBottom: 5,
-  },
-  bestmove: {
-    backgroundColor: 'rgba(0,0,255,0.2)',
   },
 });

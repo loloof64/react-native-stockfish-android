@@ -21,6 +21,7 @@
 #include <iostream>
 #include <queue>
 #include <string>
+#include <mutex>
 
 #include "bitboard.h"
 #include "endgame.h"
@@ -39,6 +40,8 @@ namespace PSQT {
 extern std::queue<std::string> ouptutLines;
 extern std::queue<std::string> inputCommands;
 
+std::mutex inputLock;
+
 int main() {
   std::cout << engine_info() << std::endl;
 
@@ -56,11 +59,17 @@ int main() {
   Eval::NNUE::init();
 
   UCI::loop([&](){
+    ::inputLock.lock();
+
     if (::inputCommands.empty()) {
+      ::inputLock.unlock();
       return std::string("#ERROR: no available line to read !");
     }
     auto input = ::inputCommands.front();
     ::inputCommands.pop();
+
+    ::inputLock.unlock();
+    
     return input;
   },  [&](std::string output) {
     ::ouptutLines.push(output);
