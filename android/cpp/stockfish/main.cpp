@@ -59,7 +59,9 @@ int main() {
     if (::inputCommands.empty()) {
       return std::string("#ERROR: no available line to read !");
     }
-    return ::inputCommands.front();
+    auto input = ::inputCommands.front();
+    ::inputCommands.pop();
+    return input;
   },  [&](std::string output) {
     ::ouptutLines.push(output);
   });

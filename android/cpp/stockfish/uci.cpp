@@ -125,7 +125,7 @@ namespace {
   // the thinking time and other parameters from the input string, then starts
   // the search.
 
-  void go(Position& pos, istringstream& is, StateListPtr& states) {
+  void  go(Position& pos, istringstream& is, StateListPtr& states) {
 
     Search::LimitsType limits;
     string token;
@@ -264,17 +264,17 @@ void UCI::loop(std::function<std::string(void)> inputCallback, std::function<voi
 
   pos.set(StartFEN, false, &states->back(), Threads.main());
 
-  cmd = inputCallback();
-
   do {
+      cmd = inputCallback();
       // Block here waiting for input or EOF    
-      while (cmd.find("#ERROR", 0)) {
-          std::this_thread::sleep_for (std::chrono::milliseconds(100));
-         cmd = inputCallback();
-         ///////////////////////////////////////////
-         outputCallback(std::string("Got input command: ") + cmd);
-         ///////////////////////////////////////////
+      while (cmd.find("#ERROR") !=std::string::npos) {
+        std::this_thread::sleep_for (std::chrono::milliseconds(100));
+        cmd = inputCallback();
       }
+
+      //////////////////////////////////////////
+        outputCallback(std::string("Parsing command : ")+cmd);
+        /////////////////////////////////////////////
 
       istringstream is(cmd);
 
@@ -284,7 +284,6 @@ void UCI::loop(std::function<std::string(void)> inputCallback, std::function<voi
       if (    token == "quit"
           ||  token == "stop") {
               Threads.stop = true;
-              break;
           }
           
 
@@ -314,7 +313,7 @@ void UCI::loop(std::function<std::string(void)> inputCallback, std::function<voi
       else
           outputCallback(std::string("Unknown command: ") + cmd);
 
-  } while (true); // Command line args are one-shot
+  } while (cmd != "quit"); // Command line args are one-shot
 }
 
 
