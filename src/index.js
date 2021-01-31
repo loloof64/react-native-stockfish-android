@@ -1,2 +1,2 @@
 import EngineWrapper from './EngineWrapper';
-export default new EngineWrapper();
+export default EngineWrapper;

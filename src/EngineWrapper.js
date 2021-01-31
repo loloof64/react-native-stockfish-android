@@ -4,10 +4,15 @@ import parseIntValue from './parseIntValue';
 
 const stockfishEventEmitter = new NativeEventEmitter(Stockfish);
 
-const DEFAULT_FEN = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
-
 export default class EngineWrapper {
-  constructor() {
+  /*
+   callback should be a function taking
+   -> type as string (1st parameter)
+   -> data as object
+   */
+  constructor(callback) {
+    this.ready = false;
+    this.eventCallback = callback;
     this.setupNativeEventSubscription();
     this.initializeStockfish();
   }
@@ -20,23 +25,14 @@ export default class EngineWrapper {
     }
   }
 
-  /*
-   callback should be a function taking
-   -> type as string (1st parameter)
-   -> data as object
-   */
-  setEventCallback(callback) {
-    this.eventCallback = callback;
-  }
-
   setupNativeEventSubscription() {
     this.subscription = stockfishEventEmitter.addListener(
       'engine_data',
       (data) => {
         console.log('Got data : ' + JSON.stringify(data));
 
-        if (!Stockfish.ready()) return;
         const response = this.parseEngineReponse(data);
+        if (!response) return;
 
         switch (response.type) {
           case 'bestMove':
@@ -63,6 +59,11 @@ export default class EngineWrapper {
   }
 
   parseEngineReponse(response) {
+    if (response === 'readyok') {
+      this.ready = true;
+      return;
+    }
+    if (!this.ready) return;
     if (response.startsWith('bestmove')) {
       const parts = response.split(' ');
       return {
@@ -95,7 +96,7 @@ export default class EngineWrapper {
     }
   }
 
-  newGame(positionFen = DEFAULT_FEN) {
+  newGame() {
     Stockfish.launchCommand('stop');
     Stockfish.launchCommand('uci');
     Stockfish.launchCommand('isready');
@@ -103,7 +104,6 @@ export default class EngineWrapper {
     Stockfish.launchCommand('setoption name Ponder value false');
     Stockfish.launchCommand('setoption name Skill Level value 20');
     Stockfish.launchCommand('setoption name MultiPV value 3');
-    Stockfish.launchCommand('position fen ' + positionFen);
   }
 
   launchCommand(command) {

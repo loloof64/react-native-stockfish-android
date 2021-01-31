@@ -1,12 +1,5 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
-
-import React, {Component} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
-  AppRegistry,
   StyleSheet,
   Text,
   View,
@@ -16,124 +9,119 @@ import {
 } from 'react-native';
 import Engine from 'react-native-stockfish-android';
 
-export default class App extends Component {
-  state = {
-    depth: 0,
-    score: 0,
-    moves: '',
-    baseTurn: 'w',
-    info: [
-      {score: 0, pv: ''},
-      {score: 0, pv: ''},
-      {score: 0, pv: ''},
-    ],
-  };
+export default function App() {
+  const [depth, setDepth] = useState(0);
+  const [score, setScore] = useState(0);
+  const [moves, setMoves] = useState('');
+  const [baseTurn, setBaseTurn] = useState('w');
+  const [info, setInfo] = useState([
+    {score: 0, pv: ''},
+    {score: 0, pv: ''},
+    {score: 0, pv: ''},
+  ]);
+  const [engine, setEngine] = useState(null);
 
-  constructor() {
-    super();
-    Engine.setEventCallback(this.processEvent);
-  }
-
-  processEvent(type, data) {
-    ////////////////////////////////////
-    console.log(type, data);
-    ///////////////////////////////////////
+  function processEvent(type, data) {
     if (type === 'info') {
-      const info = data;
-      const i = info.multipv - 1;
-      const nextInfo = [...this.state.info];
+      const tempInfo = data;
+
+      const i = tempInfo.multipv - 1;
+      let nextInfo = [...info];
+
+      const newScore = getScore(tempInfo.score[1]);
+
       nextInfo[i] = {
-        ...info,
-        score: this.score(info.score),
+        ...tempInfo,
+        score: newScore,
       };
-      this.setState({
-        info: nextInfo,
-        depth: info.depth,
-      });
+
+      setInfo((theInfo) => nextInfo);
+      setDepth((theDepth) => tempInfo.depth);
 
       if (i === 0) {
-        this.setState({
-          score: this.score(info.score),
-        });
+        setScore((theScore) => newScore);
       }
     } else if (type === 'bestMove') {
-      const {bestMove, score} = data;
-      this.setState((state) => ({
-        moves: state.moves + '  ' + bestMove,
-      }));
+      const {bestMove} = data;
+      setMoves((theMoves) => moves + ' ' + bestMove);
     }
   }
 
-  handleAnalyze() {
-    this.setState((state) => ({
-      baseTurn: state.moves.split(' ').length % 2 ? 'w' : 'b',
-    }));
-    Engine.newGame();
-    Engine.launchCommand('go depth 8 movetime 30000');
+  useEffect(() => {
+    setEngine(new Engine(processEvent));
+
+    return function () {
+      if (engine) {
+        engine.stop();
+      }
+    };
+  }, []);
+
+  function handleAnalyze() {
+    setBaseTurn((theBaseTurn) => (moves.split(' ').length % 2 ? 'w' : 'b'));
+    if (!engine) {
+      return;
+    }
+
+    engine.newGame();
+    engine.launchCommand('position startpos moves ' + moves);
+    engine.launchCommand('go movetime 3000');
   }
 
-  handleStop() {
-    Engine.launchCommand('stop');
+  function handleStop() {
+    if (!engine) {
+      return;
+    }
+    engine.launchCommand('stop');
   }
 
-  score(score) {
-    const {baseTurn} = this.state;
-    return ((baseTurn === 'b' ? -1 : 1) * score) / 100;
+  function getScore(score) {
+    return ((baseTurn === 'b' ? -1 : 1) * score) / 100.0;
   }
 
-  componentWillUnmount() {
-    Engine.stop();
-  }
-
-  render() {
-    return (
-      <View style={styles.container}>
-        <Button
-          onPress={() => this.handleAnalyze()}
-          title="Analyze"
-          style={styles.button}
-        />
-        <Text>
-          Score: {this.state.score} | Depth: {this.state.depth}
-        </Text>
-        <ScrollView
-          automaticallyAdjustContentInsets={false}
-          horizontal
-          style={{
-            position: 'absolute',
-            left: 0,
-            right: 0,
-            bottom: 0,
-          }}
-          contentContainerStyle={{
-            flexDirection: 'column',
-            padding: 10,
-          }}>
-          {this.state.info.map((info, i) => (
-            <View key={i} style={{}}>
-              <Text>
-                <Text style={{fontWeight: 'bold'}}>{info.score}</Text> {info.pv}
-              </Text>
-            </View>
-          ))}
-        </ScrollView>
-        <TextInput
-          style={{
-            width: 300,
-            height: 200,
-            backgroundColor: '#fff',
-            borderColor: '#ccc',
-            borderWidth: 1,
-          }}
-          multiline
-          value={this.state.moves}
-          onChangeText={(moves) => this.setState({moves})}
-          autoCapitalize="none"
-        />
-        <Button onPress={() => this.handleStop()} title="Stop" />
-      </View>
-    );
-  }
+  return (
+    <View style={styles.container}>
+      <Button onPress={handleAnalyze} title="Analyze" style={styles.button} />
+      <Text>
+        Score: {score} | Depth: {depth}
+      </Text>
+      <ScrollView
+        automaticallyAdjustContentInsets={false}
+        horizontal
+        style={{
+          position: 'absolute',
+          left: 0,
+          right: 0,
+          bottom: 0,
+        }}
+        contentContainerStyle={{
+          flexDirection: 'column',
+          padding: 10,
+        }}>
+        {info.map((info, i) => (
+          <View key={i} style={{}}>
+            <Text>
+              <Text style={{fontWeight: 'bold'}}>{info.score}</Text> {info.pv}
+            </Text>
+          </View>
+        ))}
+      </ScrollView>
+      <TextInput
+        style={{
+          width: 300,
+          height: 200,
+          backgroundColor: '#fff',
+          borderColor: '#ccc',
+          borderWidth: 1,
+        }}
+        multiline
+        value={moves}
+        onChangeText={(moves) => setMoves((m) => moves)}
+        autoCapitalize="none"
+      />
+      <Button onPress={handleStop} title="Stop" />
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({

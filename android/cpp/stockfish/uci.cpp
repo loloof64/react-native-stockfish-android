@@ -272,10 +272,6 @@ void UCI::loop(std::function<std::string(void)> inputCallback, std::function<voi
         cmd = inputCallback();
       }
 
-      //////////////////////////////////////////
-        outputCallback(std::string("Parsing command : ")+cmd);
-        /////////////////////////////////////////////
-
       istringstream is(cmd);
 
       token.clear(); // Avoid a stale if getline() returns empty or blank line

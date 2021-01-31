@@ -71,11 +71,6 @@ class StockfishAndroidModule(reactContext: ReactApplicationContext) : ReactConte
   }
 
   @ReactMethod
-  fun ready() : Boolean {
-    return isReady
-  }
-
-  @ReactMethod
   fun launchCommand(command: String) {
     println("Sending command '${command}'")
     sendCommand(command)
