@@ -4,83 +4,85 @@ import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
-import com.facebook.react.modules.core.DeviceEventManagerModule.RCTDeviceEventEmitter
+import com.facebook.react.modules.core.DeviceEventManagerModule
+
+import org.petero.droidfish.engine.ExternalEngine
+import org.petero.droidfish.engine.UCIEngineBase
+import org.petero.droidfish.engine.UCIEngine
+
+import android.util.Log
 
 
-class StockfishAndroidModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
+class StockfishAndroidModule(val reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
 
-  companion object  Library{
-    fun loadStockfish() {
-        System.loadLibrary("stockfish")
-    }
+  protected lateinit var engineMonitor: Thread
 
-    external fun readNextOutputLine() : String;
-    external fun  sendCommand(command: String);
-    external fun  main();
-  }
-
-  private var isReady = false
-  private lateinit var readerThread: Thread
-
-  init {
-    loadStockfish()
-  }
-
-  private var reactContext: ReactApplicationContext = reactContext
+  private lateinit var engine: UCIEngine
 
   override fun getName(): String {
     return "Stockfish"
   }
 
-
   @ReactMethod
-  fun startEngine(promise: Promise) {
-    println("startEngine")
-    try {
-      val mainThread = Thread { main() }
-      readerThread = Thread {readStockfishOutput()}
+  fun createEngine(promise: Promise) {
+    Log.d("SStockfish", "startEngine")
+    engine = UCIEngineBase.getEngine(reactContext.getApplicationContext(), "stockfish", object : UCIEngine.Report {
+      override fun reportError(errMsg: String?) {
+        Log.d("SStockfish", errMsg ?: "")
+      }
 
-      mainThread.start()
-      readerThread.start()
-      
-      sendCommand("uci")
-      sendCommand("isready")
-      promise.resolve("Successfully launched Stockfish")
-    }
-    catch (ex: Exception) {
-      promise.reject("Error when launching Stockfish", ex)
-    }
+      override fun reportStdOut(stdOutLine: String?) {
+        Log.d("SStockfish", stdOutLine ?: "")
+      }
+    })
+    Log.d("SStockfish", "startEngine preinit")
+    engine.initialize()
+    engineMonitor = Thread(object : Runnable {
+      override fun run() {
+        monitorLoop(engine)
+      }
+    })
+    engineMonitor.start()
+    promise.resolve(null)
   }
 
-  protected fun readStockfishOutput() {
+  protected fun monitorLoop(engine: UCIEngine) {
     while (true) {
-      if (Thread.currentThread().isInterrupted) return
-      val output = readNextOutputLine();
-      if (output.startsWith("#ERROR")) continue;
-      if (Thread.currentThread().isInterrupted) return
-      processOutputAsCommand(output)
+      val timeout: Int = getReadTimeout()
+      if (java.lang.Thread.currentThread().isInterrupted()) return
+      val s: String? = engine.readLineFromEngine(timeout)
+      if (s == null || java.lang.Thread.currentThread().isInterrupted()) return
+      if (s.length > 0) {
+        Log.d("SStockfish", s)
+        reactContext
+          .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+          .emit("engine_data", s)
+      }
+      if (java.lang.Thread.currentThread().isInterrupted()) return
+      // notifyGUI();
+      if (java.lang.Thread.currentThread().isInterrupted()) return
     }
   }
 
-  protected fun processOutputAsCommand(output: String) {
-    println("Output from stockfish: $output");
-    if (output == "readyok") isReady = true;
-      reactContext
-        .getJSModule(RCTDeviceEventEmitter::class.java)
-        .emit("engine_data", output)
+  @kotlin.jvm.Synchronized
+  private fun getReadTimeout(): Int {
+    return 400
+  }
+
+  @kotlin.jvm.Synchronized
+  fun shutdownEngine() {
+      engineMonitor.interrupt()
+      engine.shutDown()
   }
 
   @ReactMethod
-  fun launchCommand(command: String) {
-    println("Sending command '${command}'")
-    sendCommand(command)
+  fun sendCommand(command: String?) {
+    engine.writeLineToEngine(command)
   }
 
   @ReactMethod
-  fun stopEngine() {
-    println("stopEngine")
-    readerThread.interrupt()
-    sendCommand("quit")
+  fun stop() {
+    shutdownEngine()
   }
 
 }
