@@ -1,6 +1,6 @@
 # react-native-stockfish-android
 
-Use stockfish 12 in your react native Android application.
+Use stockfish 13 in your react native Android application.
 
 ## Installation
 

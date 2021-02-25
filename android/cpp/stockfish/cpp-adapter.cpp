@@ -1,6 +1,4 @@
 #include <jni.h>
-#include "mainIO.h"
-#include "main.h"
 
 extern "C" JNIEXPORT jstring JNICALL
 Java_com_loloof64_reactnativestockfishandroid_StockfishAndroidModule_00024Library_readNextOutputLine(JNIEnv *env)

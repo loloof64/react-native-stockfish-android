@@ -1,6 +1,6 @@
 /*
   Stockfish, a UCI chess playing engine derived from Glaurung 2.1
-  Copyright (C) 2004-2020 The Stockfish developers (see AUTHORS file)
+  Copyright (C) 2004-2021 The Stockfish developers (see AUTHORS file)
 
   Stockfish is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -16,59 +16,23 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Modified by loloof64
-
 #include <iostream>
-#include <queue>
-#include <string>
-#include <mutex>
-#include <utility>
 
 #include "bitboard.h"
 #include "endgame.h"
 #include "position.h"
+#include "psqt.h"
 #include "search.h"
+#include "syzygy/tbprobe.h"
 #include "thread.h"
 #include "tt.h"
 #include "uci.h"
-#include "syzygy/tbprobe.h"
-#include "mainIO.h"
 
-namespace PSQT {
-  void init();
-}
+int main(int argc, char* argv[]) {
 
-extern std::queue<std::string> ouptutLines;
-extern std::queue<std::string> inputCommands;
-
-std::mutex inLock;
-std::mutex outLock;
-
-void addOuput(std::string output) 
-{
-  std::scoped_lock g(outLock);
-  auto value = std::move(output);
-  ouptutLines.push(value);
-}
-
-std::string readInput() {
-  std::string valueToReturn;
-  std::scoped_lock g(inLock);
-
-  if (inputCommands.empty()) {
-    valueToReturn = std::string("#ERROR: no available line to read !");
-  }
-  else {
-    valueToReturn = inputCommands.front();
-    inputCommands.pop();
-  }
-
-  return valueToReturn;
-}
-
-int main() {
   std::cout << engine_info() << std::endl;
 
+  CommandLine::init(argc, argv);
   UCI::init(Options);
   Tune::init();
   PSQT::init();
@@ -76,12 +40,12 @@ int main() {
   Position::init();
   Bitbases::init();
   Endgames::init();
-  Threads.set(size_t(Options["Threads"]), addOuput);
+  Threads.set(size_t(Options["Threads"]));
   Search::clear(); // After threads are up
   Eval::NNUE::init();
 
-  UCI::loop(readInput, addOuput);
+  UCI::loop(argc, argv);
 
-  Threads.set(0, addOuput);
+  Threads.set(0);
   return 0;
 }

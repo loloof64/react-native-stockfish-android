@@ -1,6 +1,6 @@
 /*
   Stockfish, a UCI chess playing engine derived from Glaurung 2.1
-  Copyright (C) 2004-2020 The Stockfish developers (see AUTHORS file)
+  Copyright (C) 2004-2021 The Stockfish developers (see AUTHORS file)
 
   Stockfish is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -32,9 +32,7 @@ ThreadPool Threads; // Global object
 /// Thread constructor launches the thread and waits until it goes to sleep
 /// in idle_loop(). Note that 'searching' and 'exit' should be already set.
 
-Thread::Thread(size_t n, std::function<void(std::string)> outputCallback) : idx(n), stdThread([this]() {
-    this->idle_loop();
-}), outputCallback(outputCallback) {
+Thread::Thread(size_t n) : idx(n), stdThread(&Thread::idle_loop, this) {
 
   wait_for_search_finished();
 }
@@ -118,7 +116,7 @@ void Thread::idle_loop() {
 
       lk.unlock();
 
-      this->search();
+      search();
   }
 }
 
@@ -126,7 +124,7 @@ void Thread::idle_loop() {
 /// Created and launched threads will immediately go to sleep in idle_loop.
 /// Upon resizing, threads are recreated to allow for binding if necessary.
 
-void ThreadPool::set(size_t requested, std::function<void(std::string)> outputCallback) {
+void ThreadPool::set(size_t requested) {
 
   if (size() > 0) { // destroy any existing thread(s)
       main()->wait_for_search_finished();
@@ -136,10 +134,10 @@ void ThreadPool::set(size_t requested, std::function<void(std::string)> outputCa
   }
 
   if (requested > 0) { // create new thread(s)
-      push_back(new MainThread(0, outputCallback));
+      push_back(new MainThread(0));
 
       while (size() < requested)
-          push_back(new Thread(size(), outputCallback));
+          push_back(new Thread(size()));
       clear();
 
       // Reallocate the hash with the new threadpool size

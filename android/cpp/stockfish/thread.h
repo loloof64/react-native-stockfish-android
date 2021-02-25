@@ -1,6 +1,6 @@
 /*
   Stockfish, a UCI chess playing engine derived from Glaurung 2.1
-  Copyright (C) 2004-2020 The Stockfish developers (see AUTHORS file)
+  Copyright (C) 2004-2021 The Stockfish developers (see AUTHORS file)
 
   Stockfish is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -24,8 +24,6 @@
 #include <mutex>
 #include <thread>
 #include <vector>
-#include <functional>
-#include <string>
 
 #include "material.h"
 #include "movepick.h"
@@ -49,7 +47,7 @@ class Thread {
   NativeThread stdThread;
 
 public:
-  explicit Thread(size_t, std::function<void(std::string)> outputCallback);
+  explicit Thread(size_t);
   virtual ~Thread();
   virtual void search();
   void clear();
@@ -75,8 +73,7 @@ public:
   CapturePieceToHistory captureHistory;
   ContinuationHistory continuationHistory[2][2];
   Score contempt;
-protected:
-  std::function<void(std::string)> outputCallback;
+  int failedHighCnt;
 };
 
 
@@ -106,7 +103,7 @@ struct ThreadPool : public std::vector<Thread*> {
 
   void start_thinking(Position&, StateListPtr&, const Search::LimitsType&, bool = false);
   void clear();
-  void set(size_t, std::function<void(std::string)> outputCallback);
+  void set(size_t);
 
   MainThread* main()        const { return static_cast<MainThread*>(front()); }
   uint64_t nodes_searched() const { return accumulate(&Thread::nodes); }
