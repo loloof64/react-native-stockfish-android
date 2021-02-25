@@ -1,6 +1,6 @@
 /*
     DroidFish - An Android chess program.
-    Copyright (C) 2011-2014  Peter Österlund, peterosterlund2@gmail.com
+    Copyright (C) 2011-2012  Peter Österlund, peterosterlund2@gmail.com
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,10 +18,6 @@
 
 package org.petero.droidfish.engine;
 
-import android.content.Context;
-
-import com.loloof64.reactnativestockfishandroid.R;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -31,298 +27,262 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.channels.FileChannel;
 
+import android.util.Log;
+import android.content.Context;
+
 import org.petero.droidfish.EngineOptions;
+// import org.petero.droidfish.R;
 
-
-/**
- * Engine running as a process started from an external resource.
- */
+/** Engine running as a process started from an external resource. */
 public class ExternalEngine extends UCIEngineBase {
-  protected final Context context;
+    protected final Context context;
 
-  private File engineFileName;
-  private File engineWorkDir;
-  private final Report report;
-  private Process engineProc;
-  private Thread startupThread;
-  private Thread exitThread;
-  private Thread stdInThread;
-  private Thread stdErrThread;
-  private final LocalPipe inLines;
-  private boolean startedOk;
-  private boolean isRunning;
+    private File engineFileName;
+    protected static final String intSfPath = "/data/data/ru.kindbeetle.stockfish/internal_sf";
+    private static final String exePath = "/data/data/ru.kindbeetle.stockfish/engine.exe";
+    private final Report report;
+    private Process engineProc;
+    private Thread startupThread;
+    private Thread exitThread;
+    private Thread stdInThread;
+    private Thread stdErrThread;
+    private LocalPipe inLines;
+    private boolean startedOk;
+    private boolean isRunning;
 
-  public ExternalEngine(Context context, String engine, String workDir, Report report) {
-    this.context = context;
-    this.report = report;
-    engineFileName = new File(engine);
-    engineWorkDir = new File(workDir);
-    engineProc = null;
-    startupThread = null;
-    exitThread = null;
-    stdInThread = null;
-    stdErrThread = null;
-    inLines = new LocalPipe();
-    startedOk = false;
-    isRunning = false;
-  }
+    public ExternalEngine(Context context, String engine, Report report) {
+        this.report = report;
+        this.context = context;
+        engineFileName = new File(engine);
+        engineProc = null;
+        startupThread = null;
+        exitThread = null;
+        stdInThread = null;
+        stdErrThread = null;
+        inLines = new LocalPipe();
+        startedOk = false;
+        isRunning = false;
+    }
 
-  protected String internalSFPath() {
-    return context.getFilesDir().getAbsolutePath() + "/internal_sf";
-  }
-
-  @Override
-  protected void startProcess() {
-    try {
-      File exeDir = new File(context.getFilesDir(), "engine");
-      exeDir.mkdir();
-      String exePath = copyFile(engineFileName, exeDir);
-      chmod(exePath);
-      cleanUpExeDir(exeDir, exePath);
-      ProcessBuilder pb = new ProcessBuilder(exePath);
-      if (engineWorkDir.canRead() && engineWorkDir.isDirectory())
-        pb.directory(engineWorkDir);
-      synchronized (EngineUtil.nativeLock) {
-        engineProc = pb.start();
-      }
-      reNice();
-
-      startupThread = new Thread(() -> {
+    /** @inheritDoc */
+    @Override
+    protected void startProcess() {
+        isUCI = true;
         try {
-          Thread.sleep(10000);
-        } catch (InterruptedException e) {
-          return;
-        }
-        if (startedOk && isRunning && !isUCI)
-          report.reportError(context.getString(R.string.uci_protocol_error));
-      });
-      startupThread.start();
-
-      exitThread = new Thread(() -> {
-        try {
-          Process ep = engineProc;
-          if (ep != null)
-            ep.waitFor();
-          isRunning = false;
-          if (!startedOk)
-            report.reportError(context.getString(R.string.failed_to_start_engine));
-          else {
-            report.reportError(context.getString(R.string.engine_terminated));
-          }
-        } catch (InterruptedException ignore) {
-        }
-      });
-      exitThread.start();
-
-      // Start a thread to read stdin
-      stdInThread = new Thread(() -> {
-        Process ep = engineProc;
-        if (ep == null)
-          return;
-        InputStream is = ep.getInputStream();
-        InputStreamReader isr = new InputStreamReader(is);
-        BufferedReader br = new BufferedReader(isr, 8192);
-        String line;
-        try {
-          boolean first = true;
-          while ((line = br.readLine()) != null) {
-            if (Thread.currentThread().isInterrupted())
-              return;
-            synchronized (inLines) {
-              inLines.addLine(line);
-              if (first) {
-                startedOk = true;
-                isRunning = true;
-                first = false;
-              }
+            copyFile(engineFileName, new File(exePath));
+            // chmod(exePath);
+            ProcessBuilder pb = new ProcessBuilder(exePath);
+            synchronized (EngineUtil.nativeLock) {
+                engineProc = pb.start();
             }
-          }
-        } catch (IOException ignore) {
+
+            startupThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(10000);
+                    } catch (InterruptedException e) {
+                        return;
+                    }
+                    if (startedOk && isRunning && !isUCI)
+                        report.reportError("UCI protocol error");
+                }
+            });
+            startupThread.start();
+
+            exitThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Process ep = engineProc;
+                        if (ep != null)
+                            ep.waitFor();
+                        isRunning = false;
+                        if (!startedOk)
+                            report.reportError("Failed to start engine");
+                        else {
+                            report.reportError("Engine terminated");
+                        }
+                    } catch (InterruptedException e) {
+                    }
+                }
+            });
+            exitThread.start();
+
+            // Start a thread to read stdin
+            stdInThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    Process ep = engineProc;
+                    if (ep == null)
+                        return;
+                    InputStream is = ep.getInputStream();
+                    InputStreamReader isr = new InputStreamReader(is);
+                    BufferedReader br = new BufferedReader(isr, 8192);
+                    String line;
+                    try {
+                        boolean first = true;
+                        while ((line = br.readLine()) != null) {
+                            if ((ep == null) || Thread.currentThread().isInterrupted())
+                                return;
+                            synchronized (inLines) {
+                                // Log.d("SStockfish", line);
+                                inLines.addLine(line);
+                                if (first) {
+                                    startedOk = true;
+                                    isRunning = true;
+                                    first = false;
+                                }
+                            }
+                        }
+                    } catch (IOException e) {
+                        Log.d("SStockfish", "Exception!");
+                    }
+                    inLines.close();
+                }
+            });
+            stdInThread.start();
+
+            // Start a thread to ignore stderr
+            stdErrThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    byte[] buffer = new byte[128];
+                    while (true) {
+                        Process ep = engineProc;
+                        if ((ep == null) || Thread.currentThread().isInterrupted())
+                            return;
+                        try {
+                            int len = ep.getErrorStream().read(buffer, 0, 1);
+                            if (len < 0)
+                                break;
+                        } catch (IOException e) {
+                            return;
+                        }
+                    }
+                }
+            });
+            stdErrThread.start();
+        } catch (IOException ex) {
+            report.reportError(ex.getMessage());
         }
-        inLines.close();
-      });
-      stdInThread.start();
+    }
 
-      // Start a thread to ignore stderr
-      stdErrThread = new Thread(() -> {
-        byte[] buffer = new byte[128];
-        while (true) {
-          Process ep = engineProc;
-          if ((ep == null) || Thread.currentThread().isInterrupted())
-            return;
-          try {
-            int len = ep.getErrorStream().read(buffer, 0, 1);
-            if (len < 0)
-              break;
-          } catch (IOException e) {
-            return;
-          }
+    private int hashMB = -1;
+    private String gaviotaTbPath = "";
+    private boolean optionsInitialized = false;
+
+    /** @inheritDoc */
+    @Override
+    public void initOptions(EngineOptions engineOptions) {
+        super.initOptions(engineOptions);
+        hashMB = getHashMB(engineOptions.hashMB);
+        setOption("Hash", hashMB); 
+        if (engineOptions.engineProbe) {
+            gaviotaTbPath = engineOptions.gtbPath;
+            setOption("GaviotaTbPath", engineOptions.gtbPath);
+            setOption("GaviotaTbCache", 8);
         }
-      });
-      stdErrThread.start();
-    } catch (IOException | SecurityException ex) {
-      report.reportError(ex.getMessage());
+        optionsInitialized = true;
     }
-  }
 
-  /**
-   * Try to lower the engine process priority.
-   */
-  private void reNice() {
-    try {
-      java.lang.reflect.Field f = engineProc.getClass().getDeclaredField("pid");
-      f.setAccessible(true);
-      int pid = f.getInt(engineProc);
-      EngineUtil.reNice(pid, 10);
-    } catch (Throwable ignore) {
+    /** Reduce too large hash sizes. */
+    private final int getHashMB(int hashMB) {
+        if (hashMB > 16) {
+            int maxMem = (int)(Runtime.getRuntime().maxMemory() / (1024*1024));
+            if (maxMem < 16)
+                maxMem = 16;
+            if (hashMB > maxMem)
+                hashMB = maxMem;
+        }
+        return hashMB;
     }
-  }
 
-  /**
-   * Remove all files except exePath from exeDir.
-   */
-  private void cleanUpExeDir(File exeDir, String exePath) {
-    try {
-      exePath = new File(exePath).getCanonicalPath();
-      File[] files = exeDir.listFiles();
-      if (files == null)
-        return;
-      for (File f : files) {
-        if (!f.getCanonicalPath().equals(exePath) && !keepExeDirFile(f))
-          f.delete();
-      }
-    } catch (IOException ignore) {
+    /** @inheritDoc */
+    @Override
+    public boolean optionsOk(EngineOptions engineOptions) {
+        if (!optionsInitialized)
+            return true;
+        if (hashMB != getHashMB(engineOptions.hashMB))
+            return false;
+        if (haveOption("gaviotatbpath") && !gaviotaTbPath.equals(engineOptions.gtbPath))
+            return false;
+        return true;
     }
-  }
 
-  private boolean keepExeDirFile(File f) {
-    return InternalStockFish.keepExeDirFile(f);
-  }
-
-  private int hashMB = -1;
-  private String gaviotaTbPath = "";
-  private String syzygyPath = "";
-  private boolean optionsInitialized = false;
-
-  @Override
-  public void initOptions(EngineOptions engineOptions) {
-    super.initOptions(engineOptions);
-    hashMB = getHashMB(engineOptions);
-    setOption("Hash", hashMB);
-    syzygyPath = engineOptions.getEngineRtbPath(false);
-    setOption("SyzygyPath", syzygyPath);
-    gaviotaTbPath = engineOptions.getEngineGtbPath(false);
-    setOption("GaviotaTbPath", gaviotaTbPath);
-    optionsInitialized = true;
-  }
-
-  @Override
-  protected File getOptionsFile() {
-    return new File(engineFileName.getAbsolutePath() + ".ini");
-  }
-
-  /**
-   * Reduce too large hash sizes.
-   */
-  private static int getHashMB(EngineOptions engineOptions) {
-    int hashMB = engineOptions.hashMB;
-    if (hashMB > 16 && !engineOptions.unSafeHash) {
-      int maxMem = (int) (Runtime.getRuntime().maxMemory() / (1024 * 1024));
-      if (maxMem < 16)
-        maxMem = 16;
-      if (hashMB > maxMem)
-        hashMB = maxMem;
+    /** @inheritDoc */
+    @Override
+    public void setStrength(int strength) {
     }
-    return hashMB;
-  }
 
-  @Override
-  public boolean optionsOk(EngineOptions engineOptions) {
-    if (!optionsInitialized)
-      return true;
-    if (hashMB != getHashMB(engineOptions))
-      return false;
-    if (hasOption("gaviotatbpath") && !gaviotaTbPath.equals(engineOptions.getEngineGtbPath(false)))
-      return false;
-    if (hasOption("syzygypath") && !syzygyPath.equals(engineOptions.getEngineRtbPath(false)))
-      return false;
-    return true;
-  }
-
-  @Override
-  public String readLineFromEngine(int timeoutMillis) {
-    String ret = inLines.readLine(timeoutMillis);
-    if (ret == null)
-      return null;
-    if (ret.length() > 0) {
+    /** @inheritDoc */
+    @Override
+    public String readLineFromEngine(int timeoutMillis) {
+        String ret = inLines.readLine(timeoutMillis);
+        if (ret == null)
+            return null;
+        if (ret.length() > 0) {
+            // Log.d("SStockfish", ret);
 //            System.out.printf("Engine -> GUI: %s\n", ret);
-    }
-    return ret;
-  }
-
-  // XXX Writes should be handled by separate thread.
-  @Override
-  public void writeLineToEngine(String data) {
-//        System.out.printf("GUI -> Engine: %s\n", data);
-    data += "\n";
-    try {
-      Process ep = engineProc;
-      if (ep != null) {
-        ep.getOutputStream().write(data.getBytes());
-        ep.getOutputStream().flush();
-      }
-    } catch (IOException ignore) {
-    }
-  }
-
-  @Override
-  public void shutDown() {
-    if (startupThread != null)
-      startupThread.interrupt();
-    if (exitThread != null)
-      exitThread.interrupt();
-    super.shutDown();
-    if (engineProc != null) {
-      for (int i = 0; i < 25; i++) {
-        try {
-          engineProc.exitValue();
-          break;
-        } catch (IllegalThreadStateException e) {
-          try {
-            Thread.sleep(10);
-          } catch (InterruptedException ignore) {
-          }
         }
-      }
-      engineProc.destroy();
+        return ret;
     }
-    engineProc = null;
-    if (stdInThread != null)
-      stdInThread.interrupt();
-    if (stdErrThread != null)
-      stdErrThread.interrupt();
-  }
 
-  protected String copyFile(File from, File exeDir) throws IOException {
-    File to = new File(exeDir, "engine.exe");
-    new File(internalSFPath()).delete();
-    if (to.exists() && (from.length() == to.length()) && (from.lastModified() == to.lastModified()))
-      return to.getAbsolutePath();
-    try (FileInputStream fis = new FileInputStream(from);
-         FileChannel inFC = fis.getChannel();
-         FileOutputStream fos = new FileOutputStream(to);
-         FileChannel outFC = fos.getChannel()) {
-      long cnt = outFC.transferFrom(inFC, 0, inFC.size());
-      if (cnt < inFC.size())
-        throw new IOException("File copy failed");
-    } finally {
-      to.setLastModified(from.lastModified());
+    /** @inheritDoc */
+    @Override
+    public void writeLineToEngine(String data) {
+        Log.d("SStockfish", data);
+    //    System.out.printf("GUI -> Engine: %s\n", data);
+        data += "\n";
+        try {
+            Process ep = engineProc;
+            if (ep != null)
+                ep.getOutputStream().write(data.getBytes());
+        } catch (IOException e) {
+        }
     }
-    return to.getAbsolutePath();
-  }
 
-  private void chmod(String exePath) throws IOException {
-    if (!EngineUtil.chmod(exePath))
-      throw new IOException("chmod failed");
-  }
+    /** @inheritDoc */
+    @Override
+    public void shutDown() {
+        if (startupThread != null)
+            startupThread.interrupt();
+        if (exitThread != null)
+            exitThread.interrupt();
+        super.shutDown();
+        if (engineProc != null)
+            engineProc.destroy();
+        engineProc = null;
+        if (stdInThread != null)
+            stdInThread.interrupt();
+        if (stdErrThread != null)
+            stdErrThread.interrupt();
+    }
+
+    protected void copyFile(File from, File to) throws IOException {
+        new File(intSfPath).delete();
+        if (to.exists() && (from.length() == to.length()) && (from.lastModified() == to.lastModified()))
+            return;
+        if (to.exists())
+            to.delete();
+        to.createNewFile();
+        FileChannel inFC = null;
+        FileChannel outFC = null;
+        try {
+            inFC = new FileInputStream(from).getChannel();
+            outFC = new FileOutputStream(to).getChannel();
+            long cnt = outFC.transferFrom(inFC, 0, inFC.size());
+            if (cnt < inFC.size())
+                throw new IOException("File copy failed");
+        } finally {
+            if (inFC != null) { try { inFC.close(); } catch (IOException ex) {} }
+            if (outFC != null) { try { outFC.close(); } catch (IOException ex) {} }
+            to.setLastModified(from.lastModified());
+        }
+    }
+
+    // private final void chmod(String exePath) throws IOException {
+    //     if (!EngineUtil.chmod(exePath))
+    //         throw new IOException("chmod failed");
+    // }
 }

@@ -1,6 +1,6 @@
 /*
     DroidFish - An Android chess program.
-    Copyright (C) 2011-2014  Peter Österlund, peterosterlund2@gmail.com
+    Copyright (C) 2011  Peter Österlund, peterosterlund2@gmail.com
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,8 +18,6 @@
 
 package org.petero.droidfish.engine;
 
-import java.util.Map;
-
 import org.petero.droidfish.EngineOptions;
 
 public interface UCIEngine {
@@ -28,32 +26,21 @@ public interface UCIEngine {
     public interface Report {
         /** Report error message to GUI. */
         void reportError(String errMsg);
+        void reportStdOut(String stdOutLine);
     }
 
     /** Start engine. */
-    void initialize();
+    public void initialize();
 
     /** Initialize default options. */
-    void initOptions(EngineOptions engineOptions);
-
-    /** Read UCI options from .ini file and send them to the engine. */
-    void applyIniFile();
-
-    /** Set engine UCI options. */
-    boolean setUCIOptions(Map<String,String> uciOptions);
-
-    /** Save non-default UCI option values to file. */
-    void saveIniFile(UCIOptions options);
-
-    /** Get engine UCI options. */
-    UCIOptions getUCIOptions();
+    public void initOptions(EngineOptions engineOptions);
 
     /** Return true if engine options have correct values.
      * If false is returned, engine will be restarted. */
-    boolean optionsOk(EngineOptions engineOptions);
+    public boolean optionsOk(EngineOptions engineOptions);
 
     /** Shut down engine. */
-    void shutDown();
+    public void shutDown();
 
     /**
      * Read a line from the engine.
@@ -62,30 +49,27 @@ public interface UCIEngine {
      *         or empty string if no data available,
      *         or null if I/O error.
      */
-    String readLineFromEngine(int timeoutMillis);
+    public String readLineFromEngine(int timeoutMillis);
 
+    // FIXME!! Writes should be handled by separate thread.
     /** Write a line to the engine. \n will be added automatically. */
-    void writeLineToEngine(String data);
+    public void writeLineToEngine(String data);
 
-    /** Temporarily set the engine Elo strength to use for the next search.
-     *  Integer.MAX_VALUE means full strength. */
-    void setEloStrength(int elo);
+    /** Set the engine strength, allowed values 0 - 1000. */
+    public void setStrength(int strength);
 
     /** Set an engine integer option. */
-    void setOption(String name, int value);
+    public void setOption(String name, int value);
 
     /** Set an engine boolean option. */
-    void setOption(String name, boolean value);
+    public void setOption(String name, boolean value);
 
-    /** Set an engine option. If the option is not a string option,
-     * value is converted to the correct type.
-     * @return True if the option was changed. */
-    boolean setOption(String name, String value);
+    /** Set an engine string option. */
+    public void setOption(String name, String value);
 
     /** Clear list of supported options. */
-    void clearOptions();
+    public void clearOptions();
 
-    /** Register an option as supported by the engine.
-     * @param tokens  The UCI option line sent by the engine, split in words. */
-    UCIOptions.OptionBase registerOption(String[] tokens);
+    /** Register an option as supported by the engine. */
+    public void registerOption(String optName);
 }

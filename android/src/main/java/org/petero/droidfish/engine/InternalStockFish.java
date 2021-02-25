@@ -1,6 +1,6 @@
 /*
     DroidFish - An Android chess program.
-    Copyright (C) 2011-2014  Peter Österlund, peterosterlund2@gmail.com
+    Copyright (C) 2011-2012  Peter Österlund, peterosterlund2@gmail.com
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -28,60 +28,56 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Locale;
+import java.util.zip.GZIPInputStream;
 
 import android.content.Context;
-import android.os.Environment;
-
-import org.petero.droidfish.EngineOptions;
+import android.os.Build;
+import android.util.Log;
 
 /** Stockfish engine running as process, started from assets resource. */
 public class InternalStockFish extends ExternalEngine {
-    private static final String defaultNet = "nn-baeb9ef2d183.nnue";
-    private static final String netOption = "evalfile";
-    private File defaultNetFile; // To get the full path of the copied default network file
 
-    public InternalStockFish(Context context, Report report, String workDir) {
-        super(context,"", workDir, report);
+    public InternalStockFish(Context context, Report report) {
+        super(context, "", report);
     }
 
+    /** @inheritDoc */
     @Override
-    protected File getOptionsFile() {
-        File extDir = Environment.getExternalStorageDirectory();
-        return new File(extDir, "/DroidFish/uci/stockfish.ini");
+    public final void setStrength(int strength) {
+        setOption("Skill Level", strength/50);
     }
 
-    @Override
-    protected boolean editableOption(String name) {
-        name = name.toLowerCase(Locale.US);
-        if (!super.editableOption(name))
-            return false;
-        if (name.equals("skill level") || name.equals("write debug log") ||
-            name.equals("write search log"))
-            return false;
-        return true;
-    }
-
-    private long readCheckSum(File f) {
-        try (InputStream is = new FileInputStream(f);
-             DataInputStream dis = new DataInputStream(is)) {
+    private final long readCheckSum(File f) {
+        InputStream is = null;
+        try {
+            is = new FileInputStream(f);
+            DataInputStream dis = new DataInputStream(is);
             return dis.readLong();
         } catch (IOException e) {
             return 0;
+        } finally {
+            if (is != null) try { is.close(); } catch (IOException ex) {}
         }
     }
 
-    private void writeCheckSum(File f, long checkSum) {
-        try (OutputStream os = new FileOutputStream(f);
-             DataOutputStream dos = new DataOutputStream(os)) {
+    private final void writeCheckSum(File f, long checkSum) {
+        OutputStream os = null;
+        try {
+            os = new FileOutputStream(f);
+            DataOutputStream dos = new DataOutputStream(os);
             dos.writeLong(checkSum);
-        } catch (IOException ignore) {
+        } catch (IOException e) {
+        } finally {
+            if (os != null) try { os.close(); } catch (IOException ex) {}
         }
     }
 
-    private long computeAssetsCheckSum(String sfExe) {
-
-        try (InputStream is = context.getAssets().open(sfExe)) {
+    private final long computeAssetsCheckSum(String sfExe) {
+        InputStream is = null;
+        try {
+            is = context.getAssets().open(sfExe);
+            if (sfExe.endsWith(".mygz"))
+                is = new GZIPInputStream(is);
             MessageDigest md = MessageDigest.getInstance("SHA-1");
             byte[] buf = new byte[8192];
             while (true) {
@@ -100,42 +96,37 @@ public class InternalStockFish extends ExternalEngine {
             return -1;
         } catch (NoSuchAlgorithmException e) {
             return -1;
+        } finally {
+            if (is != null) try { is.close(); } catch (IOException ex) {}
         }
     }
 
     @Override
-    protected String copyFile(File from, File exeDir) throws IOException {
-        File to = new File(exeDir, "engine.exe");
-        final String sfExe = EngineUtil.internalStockFishName();
+    protected void copyFile(File from, File to) throws IOException {
+        Log.d("SStockfish", "copyFile");
+        // Log.d("SStockfish", Integer.toString(Integer.parseInt(Build.VERSION.SDK)));
+        // Log.d("SStockfish", Build.CPU_ABI);
+        // Log.d("SStockfish", EngineUtil.internalStockFishName());
+        // final String sfExe = EngineUtil.internalStockFishName();
+        final String sfExe = "stockfish-armeabi-v7a";
+        // Log.d("SStockfish", sfExe);
 
         // The checksum test is to avoid writing to /data unless necessary,
         // on the assumption that it will reduce memory wear.
-        long oldCSum = readCheckSum(new File(internalSFPath()));
+        long oldCSum = readCheckSum(new File(intSfPath));
         long newCSum = computeAssetsCheckSum(sfExe);
-        if (oldCSum != newCSum) {
-            copyAssetFile(sfExe, to);
-            writeCheckSum(new File(internalSFPath()), newCSum);
-        }
-        copyNetFile(exeDir);
-        return to.getAbsolutePath();
-    }
-
-    /** Copy the Stockfish default network file to "exeDir" if it is not already there. */
-    private void copyNetFile(File exeDir) throws IOException {
-        defaultNetFile = new File(exeDir, defaultNet);
-        if (defaultNetFile.exists())
+        if (oldCSum == newCSum)
             return;
-        File tmpFile = new File(exeDir, defaultNet + ".tmp");
-        copyAssetFile(defaultNet, tmpFile);
-        if (!tmpFile.renameTo(defaultNetFile))
-            throw new IOException("Rename failed");
-    }
 
-    /** Copy a file resource from the AssetManager to the file system,
-     *  so it can be used by native code like the Stockfish engine. */
-    private void copyAssetFile(String assetName, File targetFile) throws IOException {
-        try (InputStream is = context.getAssets().open(assetName);
-             OutputStream os = new FileOutputStream(targetFile)) {
+        if (to.exists())
+            to.delete();
+        to.createNewFile();
+
+        Log.d("SStockfish", sfExe);
+        InputStream is = context.getAssets().open(sfExe);
+        OutputStream os = new FileOutputStream(to);
+
+        try {
             byte[] buf = new byte[8192];
             while (true) {
                 int len = is.read(buf);
@@ -143,35 +134,13 @@ public class InternalStockFish extends ExternalEngine {
                     break;
                 os.write(buf, 0, len);
             }
+        } finally {
+            if (is != null) try { is.close(); } catch (IOException ex) {}
+            if (os != null) try { os.close(); } catch (IOException ex) {}
         }
-    }
 
-    /** Return true if file "f" should be kept in the exeDir directory.
-     *  It would be inefficient to remove the network file every time
-     *  an engine different from Stockfish is used, so this is a static
-     *  check performed for all engines. */
-    public static boolean keepExeDirFile(File f) {
-        return defaultNet.equals(f.getName());
-    }
+        to.setExecutable(true, false);
 
-    @Override
-    public void initOptions(EngineOptions engineOptions) {
-        super.initOptions(engineOptions);
-        UCIOptions.OptionBase opt = getUCIOptions().getOption(netOption);
-        if (opt != null)
-            setOption(netOption, opt.getStringValue());
-    }
-
-    /** Handles setting the EvalFile UCI option to a full path if needed,
-     *  pointing to the network file embedded in DroidFish. */
-    @Override
-    public boolean setOption(String name, String value) {
-        if (name.toLowerCase(Locale.US).equals(netOption) && defaultNet.equals(value)) {
-            getUCIOptions().getOption(name).setFromString(value);
-            value = defaultNetFile.getAbsolutePath();
-            writeLineToEngine(String.format(Locale.US, "setoption name %s value %s", name, value));
-            return true;
-        }
-        return super.setOption(name, value);
+        writeCheckSum(new File(intSfPath), newCSum);
     }
 }
