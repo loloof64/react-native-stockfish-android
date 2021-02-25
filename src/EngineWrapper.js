@@ -96,16 +96,6 @@ export default class EngineWrapper {
     }
   }
 
-  newGame() {
-    Stockfish.launchCommand('stop');
-    Stockfish.launchCommand('uci');
-    Stockfish.launchCommand('isready');
-    Stockfish.launchCommand('ucinewgame');
-    Stockfish.launchCommand('setoption name Ponder value false');
-    Stockfish.launchCommand('setoption name Skill Level value 20');
-    Stockfish.launchCommand('setoption name MultiPV value 3');
-  }
-
   launchCommand(command) {
     Stockfish.launchCommand(command);
   }

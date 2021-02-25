@@ -7,19 +7,19 @@ std::queue<std::string> inputCommands;
 std::mutex outputLock; 
 
 std::string readNextOutputLine() {
+  std::string valueToReturn;
   outputLock.lock();
   
   if (ouptutLines.empty()) {
-    outputLock.unlock();
-      return std::string("#ERROR: no available line to read !");
+    valueToReturn = std::string("#ERROR: no available line to read !");
+  }
+  else {
+    valueToReturn = ouptutLines.front();
+    ouptutLines.pop();  
   }
   
-  std::string line(ouptutLines.front());
-  ouptutLines.pop();
-
   outputLock.unlock();
-
-  return line;
+  return valueToReturn;
 }
 
 void sendCommand(std::string command) {

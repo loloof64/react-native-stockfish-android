@@ -36,7 +36,7 @@ android {
     
     externalNativeBuild {
         cmake {
-            cppFlags "-O2 -frtti -fexceptions -Wall -fstack-protector-all"
+            cppFlags "-O2 -frtti -fexceptions -Wall -fstack-protector-all -std=c++1z"
             abiFilters 'x86', 'x86_64', 'armeabi-v7a', 'arm64-v8a'
         }
     }

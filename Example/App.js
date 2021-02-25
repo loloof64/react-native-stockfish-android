@@ -21,9 +21,8 @@ export default function App() {
   ]);
   const [engine, setEngine] = useState(null);
 
-  function processEvent(type, data) {
-    if (type === 'info') {
-      const tempInfo = data;
+  function processInfoEvent(data) {
+    const tempInfo = data;
 
       const i = tempInfo.multipv - 1;
       let nextInfo = [...info];
@@ -41,11 +40,23 @@ export default function App() {
       if (i === 0) {
         setScore((theScore) => newScore);
       }
-    } else if (type === 'bestMove') {
-      const {bestMove} = data;
+  };
+
+  function processBestMoveEvent(data) {
+    const {bestMove} = data;
+      //////////////////////
+      console.log('current moves : '+moves);
+      ////////////////////////////
       setMoves((theMoves) => moves + ' ' + bestMove);
+  };
+
+  function processEvent(type, data) {
+    if (type === 'info') {
+      processInfoEvent(data);
+    } else if (type === 'bestMove') {
+      processBestMoveEvent(data);
     }
-  }
+  };
 
   useEffect(() => {
     setEngine(new Engine(processEvent));
@@ -63,7 +74,13 @@ export default function App() {
       return;
     }
 
-    engine.newGame();
+    engine.launchCommand('stop');
+    engine.launchCommand('uci');
+    engine.launchCommand('isready');
+    engine.launchCommand('ucinewgame');
+    engine.launchCommand('setoption name Ponder value false');
+    engine.launchCommand('setoption name Skill Level value 20');
+    engine.launchCommand('setoption name MultiPV value 3');
     engine.launchCommand('position startpos moves ' + moves);
     engine.launchCommand('go movetime 3000');
   }
@@ -77,6 +94,14 @@ export default function App() {
 
   function getScore(score) {
     return ((baseTurn === 'b' ? -1 : 1) * score) / 100.0;
+  }
+
+  function handleMovesInputChanged(newValue) {
+    ////////////////////////////////////////////////
+    console.log("moves before : "+moves);
+    console.log("moves after : "+newValue);
+    ////////////////////////////////////////////////
+    setMoves(newValue);
   }
 
   return (
@@ -116,7 +141,7 @@ export default function App() {
         }}
         multiline
         value={moves}
-        onChangeText={(moves) => setMoves((m) => moves)}
+        onChangeText={handleMovesInputChanged}
         autoCapitalize="none"
       />
       <Button onPress={handleStop} title="Stop" />

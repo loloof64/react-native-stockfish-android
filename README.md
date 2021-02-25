@@ -14,6 +14,13 @@ npm install react-native-stockfish-android
 import StockfishAndroid from "react-native-stockfish-android";
 
 // ...
+
+// processEventCallback must be a function taking two parameters : type and data
+// type (string) is either bestmove or info
+// data is payload
+const engine = new Engine(processEventCallback);
+
+// Don't forget to call stop() on the engine when needing to release your host component !
 ```
 
 ## How to run the example

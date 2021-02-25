@@ -22,6 +22,7 @@
 #include <queue>
 #include <string>
 #include <mutex>
+#include <utility>
 
 #include "bitboard.h"
 #include "endgame.h"
@@ -40,7 +41,30 @@ namespace PSQT {
 extern std::queue<std::string> ouptutLines;
 extern std::queue<std::string> inputCommands;
 
-std::mutex inputLock;
+std::mutex inLock;
+std::mutex outLock;
+
+void addOuput(std::string output) 
+{
+  std::scoped_lock g(outLock);
+  auto value = std::move(output);
+  ouptutLines.push(value);
+}
+
+std::string readInput() {
+  std::string valueToReturn;
+  std::scoped_lock g(inLock);
+
+  if (inputCommands.empty()) {
+    valueToReturn = std::string("#ERROR: no available line to read !");
+  }
+  else {
+    valueToReturn = inputCommands.front();
+    inputCommands.pop();
+  }
+
+  return valueToReturn;
+}
 
 int main() {
   std::cout << engine_info() << std::endl;
@@ -52,31 +76,12 @@ int main() {
   Position::init();
   Bitbases::init();
   Endgames::init();
-  Threads.set(size_t(Options["Threads"]),  [&](std::string output) {
-    ::ouptutLines.push(output);
-  });
+  Threads.set(size_t(Options["Threads"]), addOuput);
   Search::clear(); // After threads are up
   Eval::NNUE::init();
 
-  UCI::loop([&](){
-    ::inputLock.lock();
+  UCI::loop(readInput, addOuput);
 
-    if (::inputCommands.empty()) {
-      ::inputLock.unlock();
-      return std::string("#ERROR: no available line to read !");
-    }
-    auto input = ::inputCommands.front();
-    ::inputCommands.pop();
-
-    ::inputLock.unlock();
-    
-    return input;
-  },  [&](std::string output) {
-    ::ouptutLines.push(output);
-  });
-
-  Threads.set(0,  [&](std::string output) {
-    ::ouptutLines.push(output);
-  });
+  Threads.set(0, addOuput);
   return 0;
 }
