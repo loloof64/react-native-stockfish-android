@@ -1,10 +1,11 @@
-cmake_minimum_required(VERSION 3.19)
+cmake_minimum_required(VERSION 3.10)
 
 project("stockfish")
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+
 add_executable("${PROJECT_NAME}"    
-    ${CMAKE_SOURCE_DIR}/cpp/stockfish/cpp-adapter.cpp
-    ${CMAKE_SOURCE_DIR}/cpp/stockfish/mainIO.cpp
     ${CMAKE_SOURCE_DIR}/cpp/stockfish/benchmark.cpp
     ${CMAKE_SOURCE_DIR}/cpp/stockfish/bitbase.cpp
     ${CMAKE_SOURCE_DIR}/cpp/stockfish/bitboard.cpp
@@ -30,7 +31,7 @@ add_executable("${PROJECT_NAME}"
     ${CMAKE_SOURCE_DIR}/cpp/stockfish/syzygy/tbprobe.cpp
 )
 
-set_target_properties(stockfish PROPERTIES LINKER_LANGUAGE CXX)
+set_target_properties("${PROJECT_NAME}" PROPERTIES LINKER_LANGUAGE CXX)
 
 # Specifies a path to native header files.
 target_include_directories(
