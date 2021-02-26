@@ -23,7 +23,7 @@ const engine = new Engine(processEventCallback);
 // Don't forget to call stop() on the engine when needing to release your host component !
 ```
 
-## How to run the example
+## How to run the example (you may need to run the react-native-stockfish-android projects inside the yarn cache : as a new one is generated at dependencies installation invocation).
 
 1. install nodejs (lts or later) and yarn
 2. cd example

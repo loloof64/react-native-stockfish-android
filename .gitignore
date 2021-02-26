@@ -63,3 +63,4 @@ cxx/
 react-native-stockfish-android*.tgz
 .watchman*
 android/.cxx/
+setup_dependencies
